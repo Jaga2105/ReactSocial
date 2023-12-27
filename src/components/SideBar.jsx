@@ -7,6 +7,7 @@ import { CgSearchLoading } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { handleActiveMenu } from "../store/reducers/menuSlice";
 import SearchModal from "./modals/SearchModal";
+import CreatePostModal from "./modals/CreatePostModal";
 
 const iconStyle = {
   height: "100%",
@@ -15,6 +16,7 @@ const iconStyle = {
 const SideBar = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
   const dispatch = useDispatch();
 
@@ -52,29 +54,30 @@ const SideBar = () => {
   const handleMenu = (menuTitle) => {
     if (menuTitle === "Search") {
       setShowSearchModal((prev) => !prev);
+    } else if (menuTitle === "Create") {
+      setShowCreatePostModal((prev) => !prev);
     }
     dispatch(handleActiveMenu(menuTitle));
     setActiveMenu(menuTitle);
   };
-
 
   const handleSearchModal = (flag) => {
     dispatch(handleActiveMenu("Home"));
     setShowSearchModal(flag);
   };
 
+  const handleCreatePostModal = (flag) => {
+    dispatch(handleActiveMenu("Home"));
+    setShowCreatePostModal(flag);
+  };
+
   useEffect(() => {
     setActiveMenu(activeMenuTitle);
   }, [activeMenuTitle]);
 
-  
   return (
-    <div className="hidden md:block md:w-1/4 lg:w-1/6">
-      <SearchModal
-        open={showSearchModal}
-        handleSearchModal={handleSearchModal}
-      />
-      <div>
+    <>
+    <div className="fixed hidden md:block md:w-1/4 lg:w-1/6">
         {menuList.map((menu) => (
           <div
             key={menu.iconName}
@@ -97,11 +100,17 @@ const SideBar = () => {
             </span>
           </div>
         ))}
-      </div>
     </div>
+    <SearchModal
+        open={showSearchModal}
+        handleSearchModal={handleSearchModal}
+      />
+    <CreatePostModal
+        open={showCreatePostModal}
+        handleCreatePostModal={handleCreatePostModal}
+      />
+    </>
   );
 };
-
-
 
 export default SideBar;

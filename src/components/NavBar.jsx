@@ -7,6 +7,7 @@ import { handleActiveMenu } from "../store/reducers/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { CgSearchLoading } from "react-icons/cg";
 import SearchModal from "./modals/SearchModal";
+import CreatePostModal from "./modals/CreatePostModal";
 
 const iconStyle = {
   height: "30px",
@@ -17,6 +18,7 @@ const iconStyle = {
 const NavBar = () => {
   const [activeMenu, setActiveMenu] = useState("");
   const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
   const dispatch = useDispatch();
 
@@ -55,6 +57,8 @@ const NavBar = () => {
   const handleMenu = (menuTitle) => {
     if (menuTitle === "Search") {
       setShowSearchModal((prev) => !prev);
+    } else if (menuTitle === "Create") {
+      setShowCreatePostModal((prev) => !prev);
     }
     dispatch(handleActiveMenu(menuTitle));
     setActiveMenu(menuTitle);
@@ -63,16 +67,17 @@ const NavBar = () => {
     dispatch(handleActiveMenu("Home"));
     setShowSearchModal(flag);
   };
+
+  const handleCreatePostModal = (flag) => {
+    dispatch(handleActiveMenu("Home"));
+    setShowCreatePostModal(flag);
+  };
   useEffect(() => {
     setActiveMenu(activeMenuTitle);
   }, [activeMenuTitle]);
   return (
-    <div className="sticky">
-      <SearchModal
-        open={showSearchModal}
-        handleSearchModal={handleSearchModal}
-      />
-      <div className="sticky flex justify-between h-18 py-3 px-8 md:px-16 border-2 shadow-sm mb-6">
+    <>
+      <div className="fixed top-0 z-100 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">
         <div className="text-3xl font-bold">ReactSocial</div>
         <div className="flex justify-center items-center">
           {menuList.map((menu) => (
@@ -92,7 +97,15 @@ const NavBar = () => {
           ))}
         </div>
       </div>
-    </div>
+      <SearchModal
+        open={showSearchModal}
+        handleSearchModal={handleSearchModal}
+      />
+      <CreatePostModal
+        open={showCreatePostModal}
+        handleCreatePostModal={handleCreatePostModal}
+      />
+    </>
   );
 };
 

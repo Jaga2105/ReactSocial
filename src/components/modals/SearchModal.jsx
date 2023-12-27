@@ -1,8 +1,6 @@
 import React from 'react'
 import { motion } from "framer-motion";
 import { IoMdSearch } from 'react-icons/io';
-import { useDispatch } from 'react-redux';
-import { setShowSearchModal } from '../../store/reducers/searchSlice';
 
 const iconStyle = {
     height: "30px",

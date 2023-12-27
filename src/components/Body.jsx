@@ -5,7 +5,7 @@ import RightBar from './RightBar'
 
 const Body = () => {
   return (
-    <div className='flex'>
+    <div className='flex mt-20'>
         <SideBar/>
         <Content/>
         <RightBar/>
