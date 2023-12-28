@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { RxCross2 } from "react-icons/rx";
-import { FaArrowRight } from "react-icons/fa6";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import uploadPlaceholder from "../../assets/images/upload_img_placeholder.jpg";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -9,22 +9,37 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   const [file, setFile] = useState(null);
   const [fileDataURL, setFileDataURL] = useState(null);
   const [showPostCaption, setShowPostCaption] = useState(false);
+  const [enteredCaption, setEnteredCaption] = useState("");
   const inputRef = useRef(null);
 
-  const handleClose = () => {
-    handleCreatePostModal(false);
+  // This removes the uploaded file
+  const fileReset = () => {
     setFile(null);
     setFileDataURL(null);
-    setShowPostCaption(false)
+    setShowPostCaption(false);
   };
+
+  // This handles the action onclicking the close button
+  const handleClose = () => {
+    handleCreatePostModal(false);
+    fileReset();
+  };
+
+  // This handles the action onclicking the back button
+  const handleBack = () => {
+    if (showPostCaption) {
+      setShowPostCaption(false);
+    } else {
+      fileReset();
+    }
+  };
+
+  // This fires the click event on the file input on clicking the select post button
   const handleUpload = () => {
-      inputRef.current.click();
-    // else {
-    //   setFile(null);
-    //   setFileDataURL(null);
-    //   setShowPostCaption(false);
-    // }
+    inputRef.current.click();
   };
+
+  // This handles the file upload and file read and creates the file url using FileReader API
   const handleFileInput = (e) => {
     const file = e.target.files[0];
     if (!file.type.match(imageMimeType)) {
@@ -36,6 +51,20 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
     setFile(file);
     console.log(file.size);
   };
+
+  // This calulates the no. of letters entered in caption
+  const handleCaption = (e) => {
+    setEnteredCaption(e.target.value);
+  };
+  const handleSubmit= (e)=>{
+    e.preventDefault();
+    const newPost ={
+      imageUrl: fileDataURL,
+      caption:enteredCaption
+    }
+    console.log(newPost)
+  }
+
   useEffect(() => {
     console.log("test");
     // isCancel is used to handle the effect
@@ -68,6 +97,7 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
     <>
       {open && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
+          {/* Close button */}
           <div
             className="absolute top-5 right-5 z-10 cursor-pointer"
             onClick={handleClose}
@@ -76,51 +106,93 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
               style={{ height: "30px", width: "30px", color: "white" }}
             />
           </div>
+          {/*Modal Backdrop */}
           <div
             className="fixed h-[100vh] w-full top-0 left-0 backdrop-contrast-50 bg-[#595959]/40"
             onMouseDown={handleClose}
           ></div>
-          <div
+          {/* Modal Content */}
+          <form
             className={`absolute flex flex-col h-[450px] ${
               showPostCaption ? "w-[700px]" : "w-[400px]"
             } bg-white rounded-xl overflow-hidden`}
+            onSubmit={handleSubmit}
           >
+            {/* Modal Heading */}
             <div className="text-lg text-center font-semibold py-2 border-b-2 w-full h-[10%]">
-              <span>Create New Post</span>
+              <span>Create new post</span>
               {fileDataURL && (
-                <button onClick={() => setShowPostCaption(true)}>
-                  {" "}
-                  <FaArrowRight
-                    style={{ height: "24px", width: "24px", color: "blue" }}
-                    className="absolute right-4 top-4"
-                  />
-                </button>
-              )}
-            </div>
-            <div className={`flex ${fileDataURL ? "h-[90%]" : "h-[60%]"}`}>
-              <div className={`${showPostCaption ? "w-1/2 bg-black" : "w-full"} flex justify-center items-center`}>
-                <img
-                  src={fileDataURL || uploadPlaceholder}
-                  alt="Upload Image"
-                  className={`${fileDataURL ? "w-full h-full object-contain" : "h-full w-2/3"} `}
-                //   style={{ width: '100%', height: '100%' }}
-                />
-              </div>
-              {showPostCaption && (
-                <div className="w-1/2 px-2">
-                  <textarea
-                  className="w-full outline-none"
-                    name="caption"
-                    id=""
-                    cols="30"
-                    rows="10"
-                    placeholder="Enter caption here"
-                  ></textarea>
+                <div>
+                  {/* Back button */}
+                  <button
+                    className="absolute left-4 top-2"
+                    onClick={handleBack}
+                  >
+                    {" "}
+                    <FaArrowLeft style={{ height: "24px", width: "24px" }} />
+                  </button>
+                  {/* Next/Post button */}
+                  <div className="absolute right-4 top-2">
+                    {showPostCaption ? (
+                      <button className="text-blue-500 hover:text-black"
+                      type="submit">Post</button>
+                    ) : (
+                      <button
+                        // className="absolute right-4 top-4"
+                        onClick={() => setShowPostCaption(true)}
+                      >
+                        {" "}
+                        <FaArrowRight
+                          style={{ height: "24px", width: "24px" }}
+                        />
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
+            {/* Post content (Image and Caption) */}
+            <div className={`flex ${fileDataURL ? "h-[90%]" : "h-[60%]"}`}>
+              {/* Image */}
+              <div
+                className={`${
+                  showPostCaption ? "w-1/2 bg-black" : "w-full"
+                } flex justify-center items-center`}
+              >
+                <img
+                  src={fileDataURL || uploadPlaceholder}
+                  alt="Upload Image"
+                  className={`${
+                    fileDataURL
+                      ? "w-full h-full object-contain"
+                      : "h-full w-2/3"
+                  } `}
+                />
+              </div>
+              {/* Caption */}
+              {showPostCaption && (
+                <div className="w-1/2 px-2">
+                  <textarea
+                    className="w-full outline-none resize-none"
+                    name="caption"
+                    id=""
+                    cols="30"
+                    rows="12"
+                    maxLength={2500}
+                    placeholder="Enter caption here"
+                    onChange={handleCaption}
+                  ></textarea>
+                  <div className="text-right mt-4 mr-2">
+                    <span className="text-sm text-gray-400">
+                      {enteredCaption.length}/2500
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+            {/* Select post button which will hide after file selected */}
             {!fileDataURL && (
-                <div className="mx-auto h-[30%]">
+              <div className="mx-auto h-[30%]">
                 <input
                   type="file"
                   name="post-upload"
@@ -137,7 +209,7 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
                 </button>
               </div>
             )}
-          </div>
+          </form>
         </div>
       )}
     </>
