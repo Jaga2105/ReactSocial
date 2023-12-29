@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CgSearchLoading } from "react-icons/cg";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
+import { Link } from "react-router-dom";
 
 const iconStyle = {
   height: "30px",
@@ -81,7 +82,8 @@ const NavBar = () => {
         <div className="text-3xl font-bold">ReactSocial</div>
         <div className="flex justify-center items-center">
           {menuList.map((menu) => (
-            <div
+            <Link
+            to={`/${menu.iconName}`}
               key={menu.iconName}
               className={`${
                 menu.iconName === "Create" && "block md:hidden"
@@ -93,7 +95,7 @@ const NavBar = () => {
                 : activeMenu === menu.iconName
                 ? menu.activeIcon
                 : menu.inActiveIcon}
-            </div>
+            </Link>
           ))}
         </div>
       </div>
