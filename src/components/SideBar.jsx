@@ -8,16 +8,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleActiveMenu } from "../store/reducers/menuSlice";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
+import { Link, useLocation } from "react-router-dom";
 
 const iconStyle = {
   height: "100%",
   width: "100%",
 };
 const SideBar = () => {
-  const [activeMenu, setActiveMenu] = useState("");
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  // const [activeMenu, setActiveMenu] = useState("");
+  // const [showSearchModal, setShowSearchModal] = useState(false);
+  // const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  // const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
+  // const dispatch = useDispatch();
+
+  // This is  to get the current router path
+  const route = useLocation();
+  const currentPath = route.pathname.substring(1);
+
+  // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
+
+  // This stores the active menu
+  const [activeMenu, setActiveMenu] = useState(currentPath);
+
+  // This is to handle the visibility of search modal
+  const [showSearchModal, setShowSearchModal] = useState(false);
+
+  // This is to handle the visibility of create post modal
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+
   const dispatch = useDispatch();
 
   const menuList = [
@@ -62,24 +81,30 @@ const SideBar = () => {
   };
 
   const handleSearchModal = (flag) => {
-    dispatch(handleActiveMenu("Home"));
+    dispatch(handleActiveMenu(currentPath || "Home"));
     setShowSearchModal(flag);
   };
 
   const handleCreatePostModal = (flag) => {
-    dispatch(handleActiveMenu("Home"));
+    console.log(activeMenu)
+    dispatch(handleActiveMenu(currentPath || "Home"));
     setShowCreatePostModal(flag);
   };
 
   useEffect(() => {
-    setActiveMenu(activeMenuTitle);
+    // setActiveMenu(activeMenuTitle);
+    setActiveMenu(currentPath || activeMenuTitle);
   }, [activeMenuTitle]);
 
   return (
     <>
     <div className="fixed hidden md:block md:w-1/4 lg:w-1/6">
         {menuList.map((menu) => (
-          <div
+          <Link
+          to={`/${(menu.iconName==="Profile" || menu.iconName==="People") ? menu.iconName
+            //  : (activeMenu!="Home" && menu.iconName==="Search" ? activeMenu : "" )
+            : (menu.iconName==="Home" ? "" : currentPath )
+            }`}
             key={menu.iconName}
             className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
             onClick={() => handleMenu(menu.iconName)}
@@ -98,7 +123,7 @@ const SideBar = () => {
             >
               {menu.iconName}
             </span>
-          </div>
+          </Link>
         ))}
     </div>
     <SearchModal

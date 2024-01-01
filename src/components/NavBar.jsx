@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CgSearchLoading } from "react-icons/cg";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 const iconStyle = {
   height: "30px",
@@ -17,11 +17,24 @@ const iconStyle = {
 };
 
 const NavBar = () => {
-  const [activeMenu, setActiveMenu] = useState("");
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+  // This is  to get the current router path
+  const route = useLocation();
+  const currentPath = route.pathname.substring(1);
+
+  // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
+
+  // This stores the active menu
+  const [activeMenu, setActiveMenu] = useState(currentPath);
+
+  // This is to handle the visibility of search modal
+  const [showSearchModal, setShowSearchModal] = useState(false);
+
+  // This is to handle the visibility of create post modal
+  const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+
   const dispatch = useDispatch();
+
 
   const menuList = [
     {
@@ -65,17 +78,19 @@ const NavBar = () => {
     setActiveMenu(menuTitle);
   };
   const handleSearchModal = (flag) => {
-    dispatch(handleActiveMenu("Home"));
+    console.log(currentPath)
+    dispatch(handleActiveMenu(currentPath || "Home"));
     setShowSearchModal(flag);
   };
 
   const handleCreatePostModal = (flag) => {
-    dispatch(handleActiveMenu("Home"));
+    dispatch(handleActiveMenu(currentPath || "Home"));
     setShowCreatePostModal(flag);
   };
   useEffect(() => {
-    setActiveMenu(activeMenuTitle);
+    setActiveMenu(currentPath || activeMenuTitle);
   }, [activeMenuTitle]);
+  console.log(activeMenuTitle)
   return (
     <>
       <div className="fixed top-0 z-100 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">
@@ -83,7 +98,10 @@ const NavBar = () => {
         <div className="flex justify-center items-center">
           {menuList.map((menu) => (
             <Link
-            to={`/${menu.iconName}`}
+            to={`/${(menu.iconName==="Profile" || menu.iconName==="People") ? menu.iconName
+            //  : (activeMenu!="Home" && menu.iconName==="Search" ? activeMenu : "" )
+            : (menu.iconName==="Home" ? "" : currentPath )
+            }`}
               key={menu.iconName}
               className={`${
                 menu.iconName === "Create" && "block md:hidden"

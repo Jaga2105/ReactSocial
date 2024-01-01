@@ -11,7 +11,7 @@ const Home = () => {
       <div className="flex mt-20">
         <SideBar />
         {/* <Content /> */}
-        <div className=" md:ml-[25%] lg:ml-[16.666%]">
+        <div className=" md:ml-[25%] lg:ml-[16.666%] w-full">
           <Outlet />
         </div>
       </div>
