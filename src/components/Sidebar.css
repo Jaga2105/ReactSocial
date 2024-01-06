@@ -1,0 +1,30 @@
+.sidebar a{
+    display: flex;
+    align-items: center;
+    padding: 12px 0 12px 48px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 0 10px 10px 0;
+}
+.sidebar a:hover{
+    background-color: rgb(243, 244, 246);
+}
+.sidebar .icon-container{
+    display: flex;
+    align-items: center;
+    padding: 12px 0 12px 48px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 0 10px 10px 0;
+}
+.sidebar .icon-container:hover{
+    background-color: rgb(243, 244, 246);
+}
+
+.icon{
+    height: 30px;
+    width: 30px;
+}
+.menu-text{
+    margin-left: 8px;
+}

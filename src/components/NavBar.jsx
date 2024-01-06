@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { CgSearchLoading } from "react-icons/cg";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import "./NavBar.css"
 
 const iconStyle = {
   height: "30px",
@@ -19,7 +20,7 @@ const iconStyle = {
 const NavBar = () => {
   // This is  to get the current router path
   const route = useLocation();
-  const currentPath = route.pathname.substring(1);
+  const currentPath = route.pathname.split("/")[1];
 
   // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
@@ -69,11 +70,11 @@ const NavBar = () => {
   ];
 
   const handleMenu = (menuTitle) => {
-    if (menuTitle === "Search") {
-      setShowSearchModal((prev) => !prev);
-    } else if (menuTitle === "Create") {
-      setShowCreatePostModal((prev) => !prev);
-    }
+    // if (menuTitle === "Search") {
+    //   setShowSearchModal((prev) => !prev);
+    // } else if (menuTitle === "Create") {
+    //   setShowCreatePostModal((prev) => !prev);
+    // }
     dispatch(handleActiveMenu(menuTitle));
     setActiveMenu(menuTitle);
   };
@@ -90,13 +91,13 @@ const NavBar = () => {
   useEffect(() => {
     setActiveMenu(currentPath || activeMenuTitle);
   }, [activeMenuTitle]);
-  console.log(activeMenuTitle)
+  // console.log(activeMenuTitle)
   return (
     <>
-      <div className="fixed top-0 z-100 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">
+      <nav className="fixed top-0 z-100 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">
         <div className="text-3xl font-bold">ReactSocial</div>
         <div className="flex justify-center items-center">
-          {menuList.map((menu) => (
+          {/* {menuList.map((menu) => (
             <Link
             to={`/${(menu.iconName==="Profile" || menu.iconName==="People") ? menu.iconName
             //  : (activeMenu!="Home" && menu.iconName==="Search" ? activeMenu : "" )
@@ -114,9 +115,59 @@ const NavBar = () => {
                 ? menu.activeIcon
                 : menu.inActiveIcon}
             </Link>
-          ))}
+          ))} */}
+          <NavLink
+          to={"/"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("Home")}
+        >
+          { activeMenu === "Home" ? (
+            <IoMdHome className="icon" />
+          ) : (
+            <MdOutlineHome className="icon"/>
+          )}        
+        </NavLink>
+        <div
+          className={`ml-6 md:hidden`}
+          onClick={()=>setShowCreatePostModal((prev)=>!prev)}
+        >
+          <FiPlusSquare className="icon" />
         </div>
-      </div>
+        <div
+          className={`ml-6`}
+          onClick={()=>setShowSearchModal((prev)=>!prev)}
+        >
+          <IoMdSearch className="icon" />
+        </div>
+        <NavLink
+          to={"/People"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("People")}
+        >
+          { activeMenu === "People" ? (
+            <BsPeopleFill className="icon" />
+          ) : (
+            <BsPeople className="icon"/>
+          )}
+        </NavLink>
+        <NavLink
+          to={"/Profile"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("Profile")}
+        >
+          { activeMenu === "Profile" ? (
+            <IoMdPerson className="icon" />
+          ) : (
+            <MdPersonOutline className="icon"/>
+          )}
+        </NavLink>
+        <div
+          className={`ml-6`}
+        >
+          <MdLogout className="icon" />
+        </div>
+        </div>
+      </nav>
       <SearchModal
         open={showSearchModal}
         handleSearchModal={handleSearchModal}

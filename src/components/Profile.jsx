@@ -8,13 +8,13 @@ const Profile = () => {
   }
   return (
     <div className="px-10 w-full">
-      <div className="flex gap-20 border-b-2 py-8">
-        <div className="h-40 w-40 bg-black flex items-center justify-center text-white text-5xl font-bold rounded-full p-6">
+      <div className="flex gap-4 sm:gap-20 border-b-2 py-8">
+        <div className="h-20 w-20 sm:h-40 sm:w-40 bg-black flex items-center justify-center text-white text-5xl font-bold rounded-full p-6">
           G
         </div>
         <div className="flex flex-col gap-3">
           <span className="text-xl font-bold">Geralt of Rivia</span>
-          <div className="flex gap-8">
+          <div className="flex gap-2 sm:gap-8">
             <span>
               {" "}
               <strong>1</strong> post

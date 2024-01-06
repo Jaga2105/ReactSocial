@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { handleActiveMenu } from "../store/reducers/menuSlice";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import "./Sidebar.css";
 
 const iconStyle = {
   height: "100%",
@@ -23,7 +24,7 @@ const SideBar = () => {
 
   // This is  to get the current router path
   const route = useLocation();
-  const currentPath = route.pathname.substring(1);
+  const currentPath = route.pathname.split("/")[1];
 
   // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
@@ -71,11 +72,11 @@ const SideBar = () => {
   ];
 
   const handleMenu = (menuTitle) => {
-    if (menuTitle === "Search") {
-      setShowSearchModal((prev) => !prev);
-    } else if (menuTitle === "Create") {
-      setShowCreatePostModal((prev) => !prev);
-    }
+    // if (menuTitle === "Search") {
+    //   setShowSearchModal((prev) => !prev);
+    // } else if (menuTitle === "Create") {
+    //   setShowCreatePostModal((prev) => !prev);
+    // }
     dispatch(handleActiveMenu(menuTitle));
     setActiveMenu(menuTitle);
   };
@@ -86,7 +87,7 @@ const SideBar = () => {
   };
 
   const handleCreatePostModal = (flag) => {
-    console.log(activeMenu)
+    console.log(activeMenu);
     dispatch(handleActiveMenu(currentPath || "Home"));
     setShowCreatePostModal(flag);
   };
@@ -98,7 +99,7 @@ const SideBar = () => {
 
   return (
     <>
-    <div className="fixed hidden md:block md:w-1/4 lg:w-1/6">
+      {/* <div className="fixed hidden md:block md:w-1/4 lg:w-1/6">
         {menuList.map((menu) => (
           <Link
           to={`/${(menu.iconName==="Profile" || menu.iconName==="People") ? menu.iconName
@@ -125,12 +126,71 @@ const SideBar = () => {
             </span>
           </Link>
         ))}
-    </div>
-    <SearchModal
+    </div> */}
+
+      <div className="sidebar fixed hidden md:block md:w-1/4 lg:w-1/6">
+        <NavLink
+          to={"/"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("Home")}
+        >
+          { activeMenu === "Home" ? (
+            <IoMdHome className="icon" />
+          ) : (
+            <MdOutlineHome className="icon"/>
+          )}        
+          <span className=" text-xl font-bold menu-text">Home</span>
+        </NavLink>
+        <div
+          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
+          onClick={()=>setShowSearchModal((prev)=>!prev)}
+        >
+          <IoMdSearch className="icon" />
+          <span className=" text-xl font-bold menu-text">Search</span>
+        </div>
+        <NavLink
+          to={"/People"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("People")}
+        >
+          { activeMenu === "People" ? (
+            <BsPeopleFill className="icon" />
+          ) : (
+            <BsPeople className="icon"/>
+          )}
+          <span className=" text-xl font-bold menu-text">People</span>
+        </NavLink>
+        <NavLink
+          to={"/Profile"}
+          className={({ isActive }) => (isActive ? "active" : "")}
+          onClick={()=>handleMenu("Profile")}
+        >
+          { activeMenu === "Profile" ? (
+            <IoMdPerson className="icon" />
+          ) : (
+            <MdPersonOutline className="icon"/>
+          )}
+          <span className=" text-xl font-bold menu-text">Profile</span>
+        </NavLink>
+        <div
+          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
+          onClick={()=>setShowCreatePostModal((prev)=>!prev)}
+        >
+          <FiPlusSquare className="icon" />
+          <span className=" text-xl font-bold menu-text">Create</span>
+        </div>
+        <div
+          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
+        >
+          <MdLogout className="icon" />
+          <span className=" text-xl font-bold menu-text">Logout</span>
+        </div>
+      </div>
+      <SearchModal
         open={showSearchModal}
         handleSearchModal={handleSearchModal}
       />
-    <CreatePostModal
+      <CreatePostModal
         open={showCreatePostModal}
         handleCreatePostModal={handleCreatePostModal}
       />
