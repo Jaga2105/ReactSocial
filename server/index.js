@@ -3,11 +3,13 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const authRoute = require('./routes/authRoute')
+const userRoute = require("./routes/userRoute")
 
 app.use(express.json({ limit: '5mb' }))
  
 // Routes
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute)
 
 // Database connection
 mongoose
