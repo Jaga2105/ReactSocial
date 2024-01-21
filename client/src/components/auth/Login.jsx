@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { handleLogin } from "../../store/reducers/authSlice";
+import { handleFetch, handleLogin } from "../../store/reducers/authSlice";
+import { login } from "../../api/authAPI";
+import PulseLoader from "react-spinners/PulseLoader";
 
 const initialFormValues = {
   email: "",
   password: "",
 };
 const initialErrors = {
-  name: {
-    error: false,
-    errorMsg: "",
-  },
   email: {
     error: false,
     errorMsg: "",
@@ -28,31 +26,9 @@ const Login = () => {
   const [visible, setVisible] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [errors, setErrors] = useState(initialErrors);
+  const isFetching = useSelector((state) => state.auth.isFetching);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const validateName = (name, value) => {
-    let errorMsg = "";
-    let error = false;
-    if (value === "") {
-      errorMsg = `${name} can't be empty`;
-      error = true;
-    } else if (value.length < 5) {
-      errorMsg = `${name} should be of atleast 5 characters`;
-      error = true;
-    }
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-    setErrors({
-      ...errors,
-      [name]: {
-        error,
-        errorMsg,
-      },
-    });
-  };
 
   const validateEmail = (name, value) => {
     const regEx = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
@@ -114,7 +90,7 @@ const Login = () => {
     handleOnchange(e);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     for (let key in errors) {
       if (errors[key].error) {
@@ -124,17 +100,30 @@ const Login = () => {
       }
     }
     console.log(formValues);
-    dispatch(handleLogin(true));
+    // Login started
+    dispatch(handleFetch(true));
+
+    const response = await login(formValues);
+    if (response.error) {
+      console.log(response);
+      // Error in failure
+      dispatch(handleFetch(false));
+      return toast.error(response.error);
+    }
+    console.log(response.user);
+    localStorage.setItem("user", JSON.stringify(response.user));
+    localStorage.setItem(
+      "userExpiry",
+      new Date().getTime() + 2 * 24 * 60 * 60 * 1000
+    );
+    dispatch(handleLogin(response.user));
+
+    // login success
+    dispatch(handleFetch(false));
     navigate("/");
   };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-ceneter py-12 sm:px-6 lg:px-8">
-      {/* {user && <Navigate to={"/login"} replace={true}></Navigate>} */}
-      {/* <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign In
-        </h2>
-      </div> */}
       <div className="mt-8 sm:mx-auto  sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-600">
@@ -203,14 +192,23 @@ const Login = () => {
                 )}
               </div>
             </div>
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              >
-                Login
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="group relative w-full h-[40px] flex justify-center items-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              {isFetching ? (
+                <PulseLoader
+                  color={"#ffffff"}
+                  // loading={loading}
+                  // cssOverride={override}
+                  size={10}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                "Login"
+              )}
+            </button>
             <div className={`flex justify-center w-full`}>
               <h4>New User?</h4>
               <Link to="/signup" className="text-blue-600 pl-2">

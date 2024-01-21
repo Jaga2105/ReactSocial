@@ -12,12 +12,12 @@ import { useSelector } from "react-redux";
 
 
 function App() {
-  const isLoggedIn= useSelector((state)=>state.auth.isLoggedIn)
-  console.log(isLoggedIn)
+  const user= useSelector((state)=>state.auth.user)
+  console.log(user)
   const router = createBrowserRouter([
     {
       path: "/",
-      element: isLoggedIn ? <Home /> : <Welcome/>,
+      element: user ? <Home /> : <Welcome/>,
       children: [
         {
           path:"/",
