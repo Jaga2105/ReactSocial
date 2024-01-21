@@ -21,7 +21,7 @@ exports.getUser = async (req, res) => {
   res.json(req.profile);
 };
 
-exports.getAllUsers = async (req, res) => {
+exports.searchUsers = async (req, res) => {
   try {
     const users = req.query.username
       ? await User.find({
@@ -36,31 +36,42 @@ exports.getAllUsers = async (req, res) => {
 };
 
 exports.getPeople = async (req, res) => {
+  let following = [
+    ...req.profile.following,
+    {
+      _id: req.profile._id,
+      username: req.profile.username,
+      email: req.profile.email,
+    },
+  ];
   try {
-    let notFollowed = await User.aggregate([
-      {
-        $match: { _id: req.profile._id },
-      },
-      {
-        $project: {
-          _id: 0,
-          uniqueValues: {
-            $setDifference: [req.profile.followers, req.profile.following],
-          },
-        },
-      },
-    ]);
-    if (!notFollowed) return res.status(403).json("No people found!");
-    const result = await Promise.all(
-      notFollowed[0].uniqueValues.map(async (id) => {
-        const user = await User.findById(id).select(
-          "_id username profilePic following followers"
-        );
-        return user;
-      })
+    // let notFollowed = await User.aggregate([
+    //   {
+    //     $match: { _id: req.profile._id },
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       uniqueValues: {
+    //         $setDifference: [req.profile.followers, req.profile.following],
+    //       },
+    //     },
+    //   },
+    // ]);
+    // if (!notFollowed) return res.status(403).json("No people found!");
+    // const result = await Promise.all(
+    //   notFollowed[0].uniqueValues.map(async (id) => {
+    //     const user = await User.findById(id).select(
+    //       "_id username profilePic following followers"
+    //     );
+    //     return user;
+    //   })
+    // );
+
+    let users = await User.find({ _id: { $nin: following } }).select(
+      "_id username profilePic"
     );
-    console.log(result);
-    return res.status(200).json(result);
+    res.status(200).json(users);
   } catch (error) {
     res.status(500).json(error);
   }

@@ -1,5 +1,5 @@
 const { isSignedIn } = require("../controllers/auth");
-const { getUserById, getUser, updateUser, addFollowing, addFollowers, removeFollowing, removeFollowers, getAllUsers, getPeople } = require("../controllers/user");
+const { getUserById, getUser, updateUser, addFollowing, addFollowers, removeFollowing, removeFollowers, getPeople, searchUsers } = require("../controllers/user");
 
 const router = require("express").Router();
 
@@ -9,7 +9,7 @@ router.param("userId", getUserById);
 router.get('/:userId', isSignedIn, getUser)
 
 // Get users
-router.get('/', getAllUsers)
+router.get('/', searchUsers)
 
 // Find people
 router.get('/people/:userId', isSignedIn, getPeople)
