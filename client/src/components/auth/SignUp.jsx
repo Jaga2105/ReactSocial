@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { registerUser } from "../../api/authAPI";
 
 const initialFormValues = {
   name: "",
@@ -27,6 +28,7 @@ const SignUp = () => {
   const [visible, setVisible] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [errors, setErrors] = useState(initialErrors);
+  const navigate = useNavigate();
 
   const validateName = (name, value) => {
     let errorMsg = "";
@@ -113,18 +115,33 @@ const SignUp = () => {
     handleOnchange(e);
   };
 
-  const handleSubmit = (e) =>{
-    e.preventDefault()
-    for(let key in errors){
-        if(errors[key].error){
-            console.log("empty data")
-            toast.error("Enter valid credentials")
-            return;
-        }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    for (let key in errors) {
+      if (errors[key].error) {
+        console.log("empty data");
+        toast.error("Enter valid credentials");
+        return;
+      }
     }
-    console.log(formValues)
-    
-  }
+    const newUser = {
+      username: formValues.name,
+      email: formValues.email,
+      password: formValues.password,
+    };
+    try {
+      const response= await registerUser(newUser)
+      if(response.error){
+        console.log(response)
+        return toast.error(response.error)
+      }
+      navigate("/login")
+    } catch (error) {
+      console.log(error)
+      toast(error.response.data.error);
+    }
+    console.log(formValues);
+  };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-ceneter py-12 sm:px-6 lg:px-8">
       {/* {user && <Navigate to={"/login"} replace={true}></Navigate>} */}
@@ -135,9 +152,9 @@ const SignUp = () => {
       </div> */}
       <div className="mt-8 sm:mx-auto  sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-        <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-600">
-          Sign Up
-        </h2>
+          <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-600">
+            Sign Up
+          </h2>
           <form noValidate className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label

@@ -56,14 +56,29 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   const handleCaption = (e) => {
     setEnteredCaption(e.target.value);
   };
-  const handleSubmit= (e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newPost ={
-      imageUrl: fileDataURL,
-      caption:enteredCaption
-    }
-    console.log(newPost)
-  }
+    const newPost = {
+      img: fileDataURL,
+      desc: enteredCaption,
+      postedBy: "65a641d00601df1d668f3112",
+    };
+    console.log(newPost);
+    const apiUrl = "http://localhost:5000/api/post/createPost";
+
+    fetch(apiUrl, {
+      method: "POST", // or 'GET', 'PUT', etc.
+      headers: {
+        "Content-Type": "application/json",
+        // Add any other headers if needed
+      },
+      body: JSON.stringify(newPost),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error:", error));
+      handleClose()
+  };
 
   useEffect(() => {
     console.log("test");
@@ -134,8 +149,12 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
                   {/* Next/Post button */}
                   <div className="absolute right-4 top-2">
                     {showPostCaption ? (
-                      <button className="text-blue-500 hover:text-black"
-                      type="submit">Post</button>
+                      <button
+                        className="text-blue-500 hover:text-black"
+                        type="submit"
+                      >
+                        Post
+                      </button>
                     ) : (
                       <button
                         // className="absolute right-4 top-4"
