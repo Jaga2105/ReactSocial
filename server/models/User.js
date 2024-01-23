@@ -21,14 +21,16 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     profilePic: {
-      data: {
-        type: Buffer,
-        default: Buffer.from([]), // Set a default value (e.g., empty buffer)
-      },
-      contentType: {
-        type: String,
-        default: "", // Set a default value (e.g., empty string)
-      },
+      // data: {
+      //   type: Buffer,
+      //   default: Buffer.from([]), // Set a default value (e.g., empty buffer)
+      // },
+      // contentType: {
+      //   type: String,
+      //   default: "", // Set a default value (e.g., empty string)
+      // },
+      type: String,
+          default: '',
     },
     following: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
     followers: [{ type: mongoose.Schema.ObjectId, ref: "User" }],

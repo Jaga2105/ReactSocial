@@ -9,6 +9,9 @@ const postRoute = require("./routes/postRoute")
 
 app.use(express.json({ limit: '5mb' }))
 app.use(cors())
+
+// // Middleware to parse JSON in the request body
+// app.use(express.json());
  
 // Routes
 app.use("/api/auth", authRoute);

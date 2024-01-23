@@ -49,7 +49,6 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
     }
 
     setFile(file);
-    console.log(file.size);
   };
 
   // This calulates the no. of letters entered in caption

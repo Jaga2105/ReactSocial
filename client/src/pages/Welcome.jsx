@@ -1,7 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Welcome = () => {
+  const navigate = useNavigate();
+  // This is  to get the current router path
+  const route = useLocation();
+  const currentPath = route.pathname.split("/")[1];
+  // console.log(currentPath)
+  
+  useEffect(()=>{
+    if(currentPath!==""){
+      navigate('/login')
+    }
+  },[])
   return (
     <div className="flex flex-col gap-8 justify-center items-center min-h-screen">
       <div className="text-6xl font-semibold">Welcome</div>

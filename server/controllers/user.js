@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 exports.getUserById = async (req, res, next, id) => {
   try {
@@ -78,14 +79,39 @@ exports.getPeople = async (req, res) => {
 };
 
 exports.updateUser = async (req, res) => {
+  const userData = req.body;
   try {
-    const updatedUser = await User.findByIdAndUpdate(
+    console.log(userData);
+    let hashedPassword = "";
+    // let updatedProfilePic = "";
+    if (userData.password !== "") {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(userData.password, salt);
+    }
+    // if(profilePic!==""){
+    //   updatedProfilePic=password
+    // }
+    let updatedUser = {};
+    for (let key in userData) {
+      if (userData[key] !== "") {
+        if (key === "password") {
+          updatedUser[key] = hashedPassword;
+        } else {
+          updatedUser[key] = userData[key];
+        }
+      }
+    }
+    const result = await User.findByIdAndUpdate(
       req.profile._id,
-      { $set: req.body },
-      { new: true }
+      {
+        $set: updatedUser,
+      },
+      {
+        new: true,
+      }
     );
-
-    res.status(200).json(updatedUser);
+    const { password, ...others } = result._doc;
+    return res.status(200).json(others);
   } catch (error) {
     res.status(500).json(error);
   }
