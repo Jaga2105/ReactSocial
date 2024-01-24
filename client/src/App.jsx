@@ -55,6 +55,11 @@ function App() {
     {
       path: "/login",
       element: <Login />,
+      // element: (
+      //   <ProtectedRoute redirectTo={`${user ? "/" : "/login"}`}>
+      //         <Login />
+      //       </ProtectedRoute>
+      // )
     },
     {
       path: "*",
@@ -66,6 +71,10 @@ function App() {
 export const ProtectedRoute = ({ children, redirectTo }) => {
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
+  // if(redirectTo==="/"){
+  //   console.log(redirectTo)
+  //   navigate("/")
+  // }
 
   if (!user) {
     if (redirectTo) {
@@ -78,7 +87,7 @@ export const ProtectedRoute = ({ children, redirectTo }) => {
     // Render nothing or a loading/error component if you prefer
     return null;
   }
-
+  console.log(redirectTo)
   return children;
 };
 

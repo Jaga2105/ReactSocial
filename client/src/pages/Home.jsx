@@ -8,10 +8,10 @@ const Home = () => {
   return (
     <div>
       <NavBar />
-      <div className="flex mt-20">
+      <div className="flex">
         <SideBar />
         {/* <Content /> */}
-        <div className=" md:ml-[25%] lg:ml-[16.666%] w-full">
+        <div className=" md:ml-[25%] lg:ml-[16.666%] w-full mt-16">
           <Outlet />
         </div>
       </div>

@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { BsPeople, BsPeopleFill } from "react-icons/bs";
-import { IoMdHome, IoMdPerson, IoMdSearch } from "react-icons/io";
-import { MdLogout, MdOutlineHome, MdPersonOutline } from "react-icons/md";
+import { IoMdHome, IoMdPerson, IoMdSearch, IoMdLogOut } from "react-icons/io";
+import { MdOutlineHome, MdPersonOutline } from "react-icons/md";
 import { FiPlusSquare } from "react-icons/fi";
-import { CgSearchLoading } from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import { handleActiveMenu } from "../store/reducers/menuSlice";
 import SearchModal from "./modals/SearchModal";
 import CreatePostModal from "./modals/CreatePostModal";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import "./Sidebar.css";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { logoutuser } from "../store/reducers/authSlice";
 
-const iconStyle = {
-  height: "100%",
-  width: "100%",
-};
 const SideBar = () => {
-  // const [activeMenu, setActiveMenu] = useState("");
-  // const [showSearchModal, setShowSearchModal] = useState(false);
-  // const [showCreatePostModal, setShowCreatePostModal] = useState(false);
-  // const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
+  
   // const dispatch = useDispatch();
 
   // This is  to get the current router path
@@ -39,44 +31,10 @@ const SideBar = () => {
   const [showCreatePostModal, setShowCreatePostModal] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const menuList = [
-    {
-      iconName: "Home",
-      inActiveIcon: <MdOutlineHome style={iconStyle} />,
-      activeIcon: <IoMdHome style={iconStyle} />,
-    },
-    {
-      iconName: "Search",
-      inActiveIcon: <IoMdSearch style={iconStyle} />,
-      activeIcon: <CgSearchLoading style={iconStyle} />,
-    },
-    {
-      iconName: "People",
-      inActiveIcon: <BsPeople style={iconStyle} />,
-      activeIcon: <BsPeopleFill style={iconStyle} />,
-    },
-    {
-      iconName: "Profile",
-      inActiveIcon: <MdPersonOutline style={iconStyle} />,
-      activeIcon: <IoMdPerson style={iconStyle} />,
-    },
-    {
-      iconName: "Create",
-      icon: <FiPlusSquare style={iconStyle} />,
-    },
-    {
-      iconName: "Logout",
-      icon: <MdLogout style={iconStyle} />,
-    },
-  ];
 
   const handleMenu = (menuTitle) => {
-    // if (menuTitle === "Search") {
-    //   setShowSearchModal((prev) => !prev);
-    // } else if (menuTitle === "Create") {
-    //   setShowCreatePostModal((prev) => !prev);
-    // }
     dispatch(handleActiveMenu(menuTitle));
     setActiveMenu(menuTitle);
   };
@@ -92,98 +50,80 @@ const SideBar = () => {
     setShowCreatePostModal(flag);
   };
 
+  const handleLogout = () =>{
+    dispatch(logoutuser())
+    navigate('/login')
+  }
+
   useEffect(() => {
-    // setActiveMenu(activeMenuTitle);
     setActiveMenu(currentPath || activeMenuTitle);
   }, [activeMenuTitle]);
 
   return (
     <>
-      {/* <div className="fixed hidden md:block md:w-1/4 lg:w-1/6">
-        {menuList.map((menu) => (
-          <Link
-          to={`/${(menu.iconName==="Profile" || menu.iconName==="People") ? menu.iconName
-            //  : (activeMenu!="Home" && menu.iconName==="Search" ? activeMenu : "" )
-            : (menu.iconName==="Home" ? "" : currentPath )
-            }`}
-            key={menu.iconName}
-            className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
-            onClick={() => handleMenu(menu.iconName)}
-          >
-            <div className="h-8 w-8">
-              {menu.iconName === "Create" || menu.iconName === "Logout"
-                ? menu.icon
-                : activeMenu === menu.iconName
-                ? menu.activeIcon
-                : menu.inActiveIcon}
-            </div>
-            <span
-              className={`${
-                activeMenu === menu.iconName ? "font-bold" : "font-normal"
-              } text-xl ml-4`}
-            >
-              {menu.iconName}
-            </span>
-          </Link>
-        ))}
-    </div> */}
-
-      <div className="sidebar fixed hidden md:block md:w-1/4 lg:w-1/6">
+      <div className="sidebar fixed hidden md:block md:w-1/4 lg:w-1/6 min-h-[100vh] border-r-2 mt-16 pr-4">
         <NavLink
           to={"/"}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          onClick={()=>handleMenu("Home")}
+          className={({ isActive }) =>
+            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+          }
+          onClick={() => handleMenu("Home")}
         >
-          { activeMenu === "Home" ? (
-            <IoMdHome className="icon" />
+          {activeMenu === "Home" ? (
+            <IoMdHome className="h-8 w-8" />
           ) : (
-            <MdOutlineHome className="icon"/>
-          )}        
-          <span className=" text-xl font-bold menu-text">Home</span>
+            <MdOutlineHome className="h-8 w-8" />
+          )}
+          <span className=" text-xl font-bold ml-4">Home</span>
         </NavLink>
         <div
-          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
-          onClick={()=>setShowSearchModal((prev)=>!prev)}
+          className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
+          onClick={() => setShowSearchModal((prev) => !prev)}
         >
-          <IoMdSearch className="icon" />
-          <span className=" text-xl font-bold menu-text">Search</span>
+          <IoMdSearch className="h-8 w-8" />
+          <span className=" text-xl font-bold ml-4">Search</span>
         </div>
         <NavLink
           to={"/People"}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          onClick={()=>handleMenu("People")}
+          className={({ isActive }) =>
+            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+          }
+          onClick={() => handleMenu("People")}
         >
-          { activeMenu === "People" ? (
-            <BsPeopleFill className="icon" />
+          {activeMenu === "People" ? (
+            <BsPeopleFill className="h-8 w-8" />
           ) : (
-            <BsPeople className="icon"/>
+            <BsPeople className="h-8 w-8" />
           )}
-          <span className=" text-xl font-bold menu-text">People</span>
+          <span className=" text-xl font-bold ml-4">People</span>
         </NavLink>
         <NavLink
           to={"/Profile"}
-          className={({ isActive }) => (isActive ? "active" : "")}
-          onClick={()=>handleMenu("Profile")}
+          className={({ isActive }) =>
+            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+          }
+          onClick={() => handleMenu("Profile")}
         >
-          { activeMenu === "Profile" ? (
-            <IoMdPerson className="icon" />
+          {activeMenu === "Profile" ? (
+            <IoMdPerson className="h-8 w-8" />
           ) : (
-            <MdPersonOutline className="icon"/>
+            <MdPersonOutline className="h-8 w-8" />
           )}
-          <span className=" text-xl font-bold menu-text">Profile</span>
+          <span className=" text-xl font-bold ml-4">Profile</span>
         </NavLink>
         <div
-          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
-          onClick={()=>setShowCreatePostModal((prev)=>!prev)}
+          className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
+          onClick={() => setShowCreatePostModal((prev) => !prev)}
         >
-          <FiPlusSquare className="icon" />
-          <span className=" text-xl font-bold menu-text">Create</span>
+          <FiPlusSquare className="h-8 w-8" />
+          <span className=" text-xl font-bold ml-4">Create</span>
         </div>
         <div
-          className={`icon-container flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-full hover:bg-gray-100`}
+          className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
+          onClick={handleLogout}
         >
-          <MdLogout className="icon" />
-          <span className=" text-xl font-bold menu-text">Logout</span>
+          <IoMdLogOut className="h-8 w-8" />
+          <span className=" text-xl font-bold ml-4">Logout</span>
         </div>
       </div>
       <SearchModal

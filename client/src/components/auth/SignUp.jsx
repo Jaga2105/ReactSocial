@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { registerUser } from "../../api/authAPI";
+import { useSelector } from "react-redux";
 
 const initialFormValues = {
   name: "",
@@ -28,6 +29,7 @@ const SignUp = () => {
   const [visible, setVisible] = useState(false);
   const [formValues, setFormValues] = useState(initialFormValues);
   const [errors, setErrors] = useState(initialErrors);
+  const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const validateName = (name, value) => {
@@ -142,14 +144,12 @@ const SignUp = () => {
     }
     console.log(formValues);
   };
+
+  useEffect(()=>{
+    user && navigate('/', { replace: true });
+  },[])
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-ceneter py-12 sm:px-6 lg:px-8">
-      {/* {user && <Navigate to={"/login"} replace={true}></Navigate>} */}
-      {/* <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create a New Account
-        </h2>
-      </div> */}
       <div className="mt-8 sm:mx-auto  sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <h2 className="mb-8 text-center text-3xl font-extrabold text-gray-600">

@@ -16,8 +16,13 @@ const authSlice = createSlice({
         handleFetch:(state,action)=>{
             state.isFetching = action.payload
         },
+        logoutuser:(state,action)=>{
+            state.user = null;
+            localStorage.removeItem('user');
+            localStorage.removeItem('userExpiry');
+        },
     }
 })
 
-export const { handleLogin, handleFetch } = authSlice.actions;
+export const { handleLogin, handleFetch, logoutuser } = authSlice.actions;
 export default authSlice.reducer;

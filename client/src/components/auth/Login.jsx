@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
 import { MdOutlineEmail } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +27,7 @@ const Login = () => {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [errors, setErrors] = useState(initialErrors);
   const isFetching = useSelector((state) => state.auth.isFetching);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -122,6 +123,10 @@ const Login = () => {
     dispatch(handleFetch(false));
     navigate("/");
   };
+
+  useEffect(()=>{
+    user && navigate('/', { replace: true });
+  },[])
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-ceneter py-12 sm:px-6 lg:px-8">
       <div className="mt-8 sm:mx-auto  sm:w-full sm:max-w-md">
