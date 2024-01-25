@@ -19,7 +19,6 @@ const RightBar = () => {
   };
   const getCurrentUser = async () => {
     const response = await getUserDetails(user._id, user.token);
-    console.log(response);
     setCurrentUser(response);
   };
   useEffect(() => {

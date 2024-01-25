@@ -81,7 +81,6 @@ exports.getPeople = async (req, res) => {
 exports.updateUser = async (req, res) => {
   const userData = req.body;
   try {
-    console.log(userData);
     let hashedPassword = "";
     // let updatedProfilePic = "";
     if (userData.password !== "") {
@@ -154,7 +153,6 @@ exports.addFollowers = async (req, res) => {
 };
 
 exports.removeFollowing = async (req, res, next) => {
-  console.log(req.body)
   try {
     await User.findByIdAndUpdate(req.profile._id, {
       $pull: { following: req.body.unFollowId },

@@ -46,7 +46,6 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
     const file = e.target.files[0];
     if (!file.type.match(imageMimeType)) {
       alert("Image mime type is not valid");
-      // console.log("not found")
       return;
     }
 
@@ -59,13 +58,11 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("submitted")
     const newPost = {
       img: fileDataURL,
       desc: enteredCaption,
       postedBy: user._id,
     };
-    console.log(newPost);
     const apiUrl = `http://localhost:5000/api/post/${user._id}`;
 
     fetch(apiUrl, {
@@ -84,7 +81,6 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   };
 
   useEffect(() => {
-    console.log("test");
     // isCancel is used to handle the effect
     let fileReader,
       isCancel = false;

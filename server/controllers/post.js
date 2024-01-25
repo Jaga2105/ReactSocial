@@ -1,6 +1,7 @@
 const Post = require("../models/Post");
 
 exports.getPostById = async (req, res, next, id) => {
+  console.log(id)
   try {
     let post = await Post.findById(id)
       .populate("postedBy", "_id username email profilePic")
@@ -73,6 +74,7 @@ exports.createPost = async (req, res) => {
 
 // Update post
 exports.updatePost = async (req, res) => {
+  console.log(req.body)
   try {
     const updatedPost = await Post.findByIdAndUpdate(
       req.post._id,
@@ -115,9 +117,7 @@ exports.likePost = async (req, res) => {
 
 exports.createComment = async (req, res) => {
   const { postId } = req.params;
-  const { text } = req.body;
-
-  console.log(req.body);
+  const  {text}  = req.body;
 
   try {
     const post = await Post.findById(postId);

@@ -19,7 +19,6 @@ const Profile = () => {
   const loggedInUser = useSelector((state) => state.auth.user);
 
   const user = useParams();
-  console.log(user.id);
   // const isFetching = useSelector((state) => state.auth.isFetching);
   const dispatch = useDispatch();
 
@@ -31,12 +30,10 @@ const Profile = () => {
       const userResponse = await getUserDetails(user.id, loggedInUser.token);
       const postResponse = await getPosts(user.id, loggedInUser.token);
       setUserDetails(userResponse);
-      console.log(postResponse);
       setPosts(postResponse);
     };
     fetchUserDetails();
   }, [loggedInUser._id, user.id, isUserUpdated]);
-  console.log(posts);
   return (
     <>
       {userDetails ? (
@@ -132,7 +129,6 @@ const EditProfileModal = ({
     });
   };
 
-  console.log(userData);
 
   const handleInputChange = (e) => {
     setUserData({
@@ -318,7 +314,6 @@ const ImageUpload = ({ onDone }) => {
 };
 
 const ProfileContent = ({ posts, userDetails, activeTabMenu }) => {
-  console.log(posts);
   switch (activeTabMenu) {
     case "Posts":
       return <ProfilePosts posts={posts} />;
@@ -345,7 +340,6 @@ const ProfileContent = ({ posts, userDetails, activeTabMenu }) => {
   }
 };
 const ProfilePosts = ({posts}) => {
-  console.log(posts)
   return (
     <>
       {posts ? (

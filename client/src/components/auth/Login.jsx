@@ -95,23 +95,19 @@ const Login = () => {
     e.preventDefault();
     for (let key in errors) {
       if (errors[key].error) {
-        console.log("empty data");
         toast.error("Enter valid credentials");
         return;
       }
     }
-    console.log(formValues);
     // Login started
     dispatch(handleFetch(true));
 
     const response = await login(formValues);
     if (response.error) {
-      console.log(response);
       // Error in failure
       dispatch(handleFetch(false));
       return toast.error(response.error);
     }
-    console.log(response.user);
     localStorage.setItem("user", JSON.stringify(response.user));
     localStorage.setItem(
       "userExpiry",
