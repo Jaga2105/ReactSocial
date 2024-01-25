@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { RxCross2 } from "react-icons/rx";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import uploadPlaceholder from "../../assets/images/upload_img_placeholder.jpg";
+import { useSelector } from "react-redux";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const CreatePostModal = ({ open, handleCreatePostModal }) => {
@@ -11,6 +12,7 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   const [showPostCaption, setShowPostCaption] = useState(false);
   const [enteredCaption, setEnteredCaption] = useState("");
   const inputRef = useRef(null);
+  const user = useSelector((state)=>state.auth.user);
 
   // This removes the uploaded file
   const fileReset = () => {
@@ -57,18 +59,20 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("submitted")
     const newPost = {
       img: fileDataURL,
       desc: enteredCaption,
-      postedBy: "65a641d00601df1d668f3112",
+      postedBy: user._id,
     };
     console.log(newPost);
-    const apiUrl = "http://localhost:5000/api/post/createPost";
+    const apiUrl = `http://localhost:5000/api/post/${user._id}`;
 
     fetch(apiUrl, {
       method: "POST", // or 'GET', 'PUT', etc.
       headers: {
         "Content-Type": "application/json",
+        Authorization : `Bearer ${user.token}`
         // Add any other headers if needed
       },
       body: JSON.stringify(newPost),
@@ -138,13 +142,13 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
               {fileDataURL && (
                 <div>
                   {/* Back button */}
-                  <button
-                    className="absolute left-4 top-2"
+                  <div
+                    className="absolute left-4 top-2 cursor-pointer"
                     onClick={handleBack}
                   >
                     {" "}
                     <FaArrowLeft style={{ height: "24px", width: "24px" }} />
-                  </button>
+                  </div>
                   {/* Next/Post button */}
                   <div className="absolute right-4 top-2">
                     {showPostCaption ? (
@@ -155,15 +159,15 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
                         Post
                       </button>
                     ) : (
-                      <button
-                        // className="absolute right-4 top-4"
+                      <div
+                      className="cursor-pointer"
                         onClick={() => setShowPostCaption(true)}
                       >
                         {" "}
                         <FaArrowRight
                           style={{ height: "24px", width: "24px" }}
                         />
-                      </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -219,12 +223,12 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
                   accept=".png, .jpg, .jpeg"
                   onChange={handleFileInput}
                 />
-                <button
-                  className="bg-blue-400 text-white px-3 py-2 rounded-lg hover:bg-blue-500"
+                <div
+                  className="bg-blue-400 text-white px-3 py-2 rounded-lg hover:bg-blue-500 cursor-pointer"
                   onClick={handleUpload}
                 >
                   Select Post
-                </button>
+                </div>
               </div>
             )}
           </form>

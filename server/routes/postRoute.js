@@ -23,8 +23,7 @@ router.get("/myposts/:userId", getOwnPosts);
 router.get("/feed/:userId", getTimelinePosts);
 
 // Create Post
-// router.post("/:userId", createPost);
-router.post("/createPost", createPost);
+router.post("/:userId", createPost);
 
 // Update post
 router.put("/:postId/:userId", isSignedIn, updatePost);

@@ -16,6 +16,9 @@ const NavBar = () => {
   const route = useLocation();
   const currentPath = route.pathname.split("/")[1];
 
+  // Logged in user
+  const loggedInUser = useSelector((state)=>state.auth.user);
+
   // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
 
@@ -98,7 +101,7 @@ const NavBar = () => {
           )}
         </NavLink>
         <NavLink
-          to={"/Profile"}
+          to={`/Profile/${loggedInUser._id}`}
           className={"ml-6"}
           onClick={()=>handleMenu("Profile")}
         >

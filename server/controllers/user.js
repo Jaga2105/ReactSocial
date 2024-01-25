@@ -4,8 +4,8 @@ const bcrypt = require("bcrypt");
 exports.getUserById = async (req, res, next, id) => {
   try {
     let user = await User.findById(id)
-      .populate("following", "_id, username, profilePic")
-      .populate("following", "_id, username, profilePic");
+      .populate("following", "_id username profilePic")
+      .populate("followers", "_id username profilePic");
 
     if (!user) {
       res.status(404).json({
@@ -154,9 +154,10 @@ exports.addFollowers = async (req, res) => {
 };
 
 exports.removeFollowing = async (req, res, next) => {
+  console.log(req.body)
   try {
     await User.findByIdAndUpdate(req.profile._id, {
-      $pull: { following: req.body.unfollowId },
+      $pull: { following: req.body.unFollowId },
     });
     next();
   } catch (error) {
@@ -167,7 +168,7 @@ exports.removeFollowing = async (req, res, next) => {
 exports.removeFollowers = async (req, res) => {
   try {
     let result = await User.findByIdAndUpdate(
-      req.body.unfollowId,
+      req.body.unFollowId,
       {
         $pull: { followers: req.profile._id },
       },

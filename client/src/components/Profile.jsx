@@ -5,45 +5,53 @@ import { useDispatch, useSelector } from "react-redux";
 import joinedTime from "../helpers/joinedTime";
 import GridLoader from "react-spinners/GridLoader";
 import ClipLoader from "react-spinners/ClipLoader";
+import MoonLoader from "react-spinners/MoonLoader";
 import { handleFetch } from "../store/reducers/authSlice";
+import { useParams } from "react-router-dom";
+import { getPosts } from "../api/postAPI";
+import PeopleList from "./peoplelist/PeopleList";
 
-const profileTabMenu = ["Posts", "Followers", "Following"];
 const Profile = () => {
-  const [activeTabMenu, setActiveTabMenu] = useState("Posts");
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
+  const [posts, setPosts] = useState(null);
   const [isUserUpdated, setIsUserUpdated] = useState(false);
-  const user = useSelector((state) => state.auth.user);
+  const loggedInUser = useSelector((state) => state.auth.user);
+
+  const user = useParams();
+  console.log(user.id);
   // const isFetching = useSelector((state) => state.auth.isFetching);
   const dispatch = useDispatch();
-  const HandleActiveTabMenu = (menuText) => {
-    setActiveTabMenu(menuText);
-  };
+
   useEffect(() => {
-    if(isUserUpdated){
-      setUserDetails(null)
+    if (isUserUpdated) {
+      setUserDetails(null);
     }
-    const getUser = async () => {
-      dispatch(handleFetch(true));
-      const response = await getUserDetails(user._id, user.token);
-      // console.log(response);
-      setUserDetails(response);
-      dispatch(handleFetch(false));
+    const fetchUserDetails = async () => {
+      const userResponse = await getUserDetails(user.id, loggedInUser.token);
+      const postResponse = await getPosts(user.id, loggedInUser.token);
+      setUserDetails(userResponse);
+      console.log(postResponse);
+      setPosts(postResponse);
     };
-    getUser();
-  }, [user, isUserUpdated]);
+    fetchUserDetails();
+  }, [loggedInUser._id, user.id, isUserUpdated]);
+  console.log(posts);
   return (
     <>
       {userDetails ? (
         <div className="px-2 sm:px-10 w-full">
           <div className="flex gap-4 sm:gap-20 md:gap-6 lg:gap-20 border-b-2 py-8">
             <div className="h-24 w-24 lg:h-32 lg:w-32  bg-black flex items-center justify-center text-white text-5xl font-bold rounded-full overflow-hidden">
-            {userDetails?.profilePic.length!==0 ? (
-                  <img src={userDetails?.profilePic} alt="Profile-Pic"
-                  className="h-full w-full object-cover" />
-                ) : (
-                  userDetails?.username.substring(0, 1).toUpperCase()
-                )}
+              {userDetails?.profilePic.length !== 0 ? (
+                <img
+                  src={userDetails?.profilePic}
+                  alt="Profile-Pic"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                userDetails?.username.substring(0, 1).toUpperCase()
+              )}
             </div>
             <div className="flex flex-col gap-3">
               <span className="text-xl font-bold">{userDetails?.username}</span>
@@ -64,35 +72,23 @@ const Profile = () => {
                 Joined {joinedTime(userDetails?.createdAt)}
               </div>
             </div>
-            <button
-              className="h-10 w-20 flex items-center justify-center px-4 py-2 bg-gray-300 rounded-md font-semibold ml-24 sm:ml-0"
-              onClick={() => setShowEditProfileModal(true)}
-            >
-              Edit
-            </button>
+            {user.id === loggedInUser._id && (
+              <button
+                className="h-10 w-20 flex items-center justify-center px-4 py-2 bg-gray-300 rounded-md font-semibold ml-24 sm:ml-0"
+                onClick={() => setShowEditProfileModal(true)}
+              >
+                Edit
+              </button>
+            )}
           </div>
           <div>
-            <div className="flex gap-8 justify-center p-2">
-              {profileTabMenu.map((tab) => (
-                <div
-                  key={tab}
-                  className={`text-xl p-2 cursor-pointer ${
-                    activeTabMenu === tab
-                      ? "font-bold border-b-2 border-b-black"
-                      : ""
-                  }`}
-                  onClick={() => HandleActiveTabMenu(tab)}
-                >
-                  {tab}
-                </div>
-              ))}
-            </div>
+            <TabContainer userDetails={userDetails} posts={posts} />
           </div>
           <EditProfileModal
             open={showEditProfileModal}
             setShowEditProfileModal={setShowEditProfileModal}
             userDetails={userDetails}
-            user={user}
+            user={loggedInUser}
             setIsUserUpdated={setIsUserUpdated}
           />
         </div>
@@ -111,9 +107,15 @@ const Profile = () => {
   );
 };
 
-const EditProfileModal = ({ open, setShowEditProfileModal, userDetails, user, setIsUserUpdated }) => {
+const EditProfileModal = ({
+  open,
+  setShowEditProfileModal,
+  userDetails,
+  user,
+  setIsUserUpdated,
+}) => {
   const isFetching = useSelector((state) => state.auth.isFetching);
-  const [userData, setUserData] = useState({ 
+  const [userData, setUserData] = useState({
     username: userDetails?.username,
     email: userDetails?.email,
     password: "",
@@ -138,13 +140,13 @@ const EditProfileModal = ({ open, setShowEditProfileModal, userDetails, user, se
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(handleFetch(true))
-    await updateUser(user._id, user.token, userData)
-    dispatch(handleFetch(false))
-    setIsUserUpdated(true)
-    handleClose()
+    dispatch(handleFetch(true));
+    await updateUser(user._id, user.token, userData);
+    dispatch(handleFetch(false));
+    setIsUserUpdated(true);
+    handleClose();
   };
 
   return (
@@ -171,13 +173,15 @@ const EditProfileModal = ({ open, setShowEditProfileModal, userDetails, user, se
           >
             <div className="flex justify-between items-center">
               <div className="h-20 w-20 bg-black flex items-center justify-center text-white text-2xl font-bold rounded-full overflow-hidden">
-                {userData.profilePic.length!==0 ? (
-                  <img src={userData.profilePic} alt="Profile-Pic"
-                  className="w-full h-full object-cover" />
+                {userData.profilePic.length !== 0 ? (
+                  <img
+                    src={userData.profilePic}
+                    alt="Profile-Pic"
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   userData.username.substring(0, 1).toUpperCase()
                 )}
-                
               </div>
 
               <ImageUpload
@@ -226,19 +230,23 @@ const EditProfileModal = ({ open, setShowEditProfileModal, userDetails, user, se
               />
             </div>
             <div className="flex gap-10 justify-center">
-              <button className="px-4 py-2 w-[100px] bg-red-300 rounded-md"
-              onClick={handleClose}>Cancel</button>
+              <button
+                className="px-4 py-2 w-[100px] bg-red-300 rounded-md"
+                onClick={handleClose}
+              >
+                Cancel
+              </button>
               <button
                 type="submit"
                 className="px-4 py-1 w-[100px] flex justify-center items-center bg-green-500 rounded-md"
               >
                 {isFetching ? (
                   <ClipLoader
-                  color={"#ffffff"}
-                  size={20}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
+                    color={"#ffffff"}
+                    size={20}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
                 ) : (
                   "Update"
                 )}
@@ -305,6 +313,95 @@ const ImageUpload = ({ onDone }) => {
         Edit Photo
         {/* </button> */}
       </label>
+    </>
+  );
+};
+
+const ProfileContent = ({ posts, userDetails, activeTabMenu }) => {
+  console.log(posts);
+  switch (activeTabMenu) {
+    case "Posts":
+      return <ProfilePosts posts={posts} />;
+    case "Followers":
+      return (
+        <div className="mx-10 sm:mx-20 lg:mx-32">
+          <PeopleList
+            currentUser={userDetails}
+            people={userDetails.followers}
+          />
+        </div>
+      );
+    case "Following":
+      return (
+        <div className="mx-10 sm:mx-20 lg:mx-32">
+          <PeopleList
+            currentUser={userDetails}
+            people={userDetails.following}
+          />
+        </div>
+      );
+    default:
+      return <div>No post found!</div>;
+  }
+};
+const ProfilePosts = ({posts}) => {
+  console.log(posts)
+  return (
+    <>
+      {posts ? (
+        <div className="mt-8">
+          {posts.length>0 ? (
+            <div className="flex flex-wrap gap-4">
+            {posts.map((post) => (
+              <div key={post._id} className="h-[300px] w-[300px] overflow-hidden bg-black rounded-sm">
+                <img
+                  src={post.img}
+                  alt="post-img"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
+          ) : (
+            <div className="text-xl">No posts found!</div>
+          )}
+        </div>
+      ) : (
+        <MoonLoader
+            color={"#0096FF"}
+            size={15}
+            aria-label="Loading Spinner"
+            data-testid="loader"
+          />
+      )}
+    </>
+  );
+};
+
+const TabContainer = ({ ...props }) => {
+  const profileTabMenu = ["Posts", "Followers", "Following"];
+  const [activeTabMenu, setActiveTabMenu] = useState("Posts");
+  const HandleActiveTabMenu = (menuText) => {
+    setActiveTabMenu(menuText);
+  };
+  return (
+    <>
+      <div className="flex gap-8 justify-center p-2">
+        {profileTabMenu.map((tab) => (
+          <div
+            key={tab}
+            className={`text-xl p-2 cursor-pointer ${
+              activeTabMenu === tab ? "font-bold border-b-2 border-b-black" : ""
+            }`}
+            onClick={() => HandleActiveTabMenu(tab)}
+          >
+            {tab}
+          </div>
+        ))}
+      </div>
+      <div className="min-h-[50vh]">
+        <ProfileContent activeTabMenu={activeTabMenu} {...props} />
+      </div>
     </>
   );
 };

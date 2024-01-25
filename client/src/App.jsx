@@ -31,7 +31,7 @@ function App() {
           ),
         },
         {
-          path: "/Profile",
+          path: "/Profile/:id",
           element: (
             <ProtectedRoute redirectTo={"/login"}>
               <Profile />

@@ -18,6 +18,9 @@ const SideBar = () => {
   const route = useLocation();
   const currentPath = route.pathname.split("/")[1];
 
+  // Loggedin user
+  const user = useSelector((state)=>state.auth.user);
+
   // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
 
@@ -61,7 +64,7 @@ const SideBar = () => {
 
   return (
     <>
-      <div className="sidebar fixed hidden md:block md:w-1/4 lg:w-1/6 min-h-[100vh] border-r-2 mt-16 pr-4">
+      <div className="sidebar fixed hidden md:block md:w-1/4 lg:w-1/6 min-h-[100vh] border-r-2 mt-16 pr-2">
         <NavLink
           to={"/"}
           className={({ isActive }) =>
@@ -98,7 +101,7 @@ const SideBar = () => {
           <span className=" text-xl font-bold ml-4">People</span>
         </NavLink>
         <NavLink
-          to={"/Profile"}
+          to={`Profile/${user._id}`}
           className={({ isActive }) =>
             `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
           }

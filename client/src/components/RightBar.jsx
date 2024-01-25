@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSuggestedPeople } from "../api/userAPI";
+import { getSuggestedPeople, getUserDetails } from "../api/userAPI";
 import { handleFetch } from "../store/reducers/authSlice";
 import GridLoader from "react-spinners/GridLoader";
-
+import PeopleList from "./peoplelist/PeopleList";
 
 const RightBar = () => {
   const [people, setPeople] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const user = useSelector((state) => state.auth.user);
   // const isFetching = useSelector((state) => state.auth.isFetching);
   const dispatch = useDispatch();
 
   const getPeople = async () => {
-    // dispatch(handleFetch(true));
     const response = await getSuggestedPeople(user._id, user.token);
     setPeople(response);
-    // dispatch(handleFetch(false));
+  };
+  const getCurrentUser = async () => {
+    const response = await getUserDetails(user._id, user.token);
+    console.log(response);
+    setCurrentUser(response);
   };
   useEffect(() => {
     getPeople();
+    getCurrentUser();
   }, [user]);
   return (
-    <div className="hidden lg:flex flex-col w-2/6 p-2 items-center">
-      { people ? (
-        <div className="flex flex-col gap-6">
-        <span className="text-2xl font-bold">Suggested for you</span>
-        {/* <div className="mt-4"> */}
-        {people.map((user) => (
+    <div className="hidden lg:flex flex-col w-2/6 px-4">
+      <div className="">
+        <div className="text-2xl font-bold my-4">Suggested for you</div>
+        {/* {people.map((user) => (
           <div
             key={user.username}
             className="flex w-[300px] justify-between items-center"
@@ -47,19 +50,26 @@ const RightBar = () => {
               Follow
             </button>
           </div>
-        ))}
-      </div>
-      ) : (
-        <div className="mt-28">
-        <GridLoader
-            color={"#0096FF"}
-            size={15}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+        ))} */}
+        {currentUser && people ? (
+          <>
+            {people.length > 0 ? (
+              <PeopleList currentUser={currentUser} people={people} />
+            ) : (
+              <div className="mt-20 text-xl">No users found!</div>
+            )}
+          </>
+        ) : (
+          <div className="mt-28">
+            <GridLoader
+              color={"#0096FF"}
+              size={15}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
           </div>
-      )}
-      
+        )}
+      </div>
     </div>
   );
 };
