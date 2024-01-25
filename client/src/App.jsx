@@ -5,7 +5,6 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
-import Profile from "./components/Profile";
 import Content from "./components/Content";
 import People from "./components/People";
 import SignUp from "./components/auth/SignUp";
@@ -13,6 +12,7 @@ import Login from "./components/auth/Login";
 import Welcome from "./pages/Welcome";
 import { useSelector } from "react-redux";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 
 function App() {
   const user = useSelector((state) => state.auth.user);

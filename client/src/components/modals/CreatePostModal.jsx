@@ -110,7 +110,7 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
   return (
     <>
       {open && (
-        <div className="absolute inset-0 flex items-center justify-center z-10">
+        <div className="absolute inset-0 flex items-center justify-center z-40">
           {/* Close button */}
           <div
             className="absolute top-5 right-5 z-10 cursor-pointer"
@@ -127,7 +127,7 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
           ></div>
           {/* Modal Content */}
           <form
-            className={`absolute flex flex-col h-[450px] ${
+            className={`fixed flex flex-col h-[450px] ${
               showPostCaption ? "w-[700px]" : "w-[400px]"
             } bg-white rounded-xl overflow-hidden`}
             onSubmit={handleSubmit}
