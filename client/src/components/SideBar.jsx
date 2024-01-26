@@ -129,10 +129,12 @@ const SideBar = () => {
           <span className=" text-xl font-bold ml-4">Logout</span>
         </div>
       </div>
+      <div className="hidden sm:block">
       <SearchModal
         open={showSearchModal}
         handleSearchModal={handleSearchModal}
       />
+      </div>
       <CreatePostModal
         open={showCreatePostModal}
         handleCreatePostModal={handleCreatePostModal}

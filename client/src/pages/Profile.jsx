@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getUserDetails } from "../api/userAPI";
 import { useDispatch, useSelector } from "react-redux";
-import joinedTime from "../helpers/joinedTime";
+import formattedTime from "../helpers/formattedTime";
 import GridLoader from "react-spinners/GridLoader";
 import { useParams } from "react-router-dom";
 import { getPosts } from "../api/postAPI";
@@ -63,7 +63,7 @@ const Profile = () => {
               </div>
               <div className="text-gray-600">{userDetails?.email}</div>
               <div className="text-gray-600">
-                Joined {joinedTime(userDetails?.createdAt)}
+                Joined {formattedTime(userDetails?.createdAt)}
               </div>
             </div>
             {user.id === loggedInUser._id && (

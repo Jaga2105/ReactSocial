@@ -8,7 +8,7 @@ const ProfilePosts = ({posts}) => {
             {posts.length>0 ? (
               <div className="flex flex-wrap gap-4">
               {posts.map((post) => (
-                <div key={post._id} className="h-[23%] w-[23%] overflow-hidden bg-black rounded-sm">
+                <div key={post._id} className="h-[22%] w-[22%] overflow-hidden bg-black rounded-sm">
                   <img
                     src={post.img}
                     alt="post-img"

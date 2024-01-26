@@ -1,4 +1,4 @@
- const joinedTime = (joinedAt)=>{
+ const formattedTime = (joinedAt)=>{
     // calulate current time
     const currentTime = new Date();
 
@@ -46,4 +46,4 @@
 
     return `${timeValue} ${timeUnit}${timeValue!==1 ? "s" :""} ago`;
 }
-export default joinedTime;
+export default formattedTime;
