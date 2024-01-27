@@ -25,8 +25,7 @@ exports.getUser = async (req, res) => {
 exports.searchUsers = async (req, res) => {
   try {
     const users = req.query.username
-      ? await User.find({
-          username: new RegExp(req.query.username, "i"),
+      ? await User.find({username: new RegExp(`^${req.query.username}`, 'i'),
         }).select("_id username email profilePic")
       : await User.find().select("_id username email profilePic");
     if (!users) return res.status(404).json("No user found!");

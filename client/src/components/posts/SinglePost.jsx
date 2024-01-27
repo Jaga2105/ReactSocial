@@ -47,7 +47,6 @@ const SinglePost = ({
   };
 
   const handleShowEditMenu = () => {
-    console.log("testing");
     setShowEditMenu((prev) => !prev);
   };
   const handleShowEditPostModal = () => {
@@ -165,7 +164,6 @@ const SinglePost = ({
               <div>
                 {/* <div className="h-6 w-6 rounded-full "></div> */}
                 <div className="flex gap-2">
-                  {console.log(post.comments[0].postedBy)}
                   <div className="h-6 w-6 bg-black flex items-center justify-center rounded-full overflow-hidden flex-shrink-0">
                     {post.comments[0].postedBy.profilePic.length !== 0 ? (
                       <img
