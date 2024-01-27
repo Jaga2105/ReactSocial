@@ -1,13 +1,10 @@
+const url = import.meta.env.VITE_API_URL;
 export const getUserDetails = async (id, token) => {
-    const apiUrl = `http://localhost:5000/api/user/${id}`;
-    return await fetch(apiUrl, {
-      method: "GET", // or 'GET', 'PUT', etc.
+    return await fetch(`${url}/user/${id}`, {
+      method: "GET",
       headers: {
-        // "Content-Type": "application/json",
         Authorization : `Bearer ${token}`
-        // Add any other headers if needed
       },
-    //   body: JSON.stringify(userData),
     })
       .then((response) => response.json())
       .then((data) => data)
@@ -15,12 +12,8 @@ export const getUserDetails = async (id, token) => {
   };
 
   export const searchUser = async (searchQuery) => {
-    const apiUrl = `http://localhost:5000/api/user/?username=${searchQuery}`;
-    return await fetch(apiUrl, {
-      method: "GET", // or 'GET', 'PUT', etc.
-      // headers: {
-      //   "Content-Type": "application/json"
-      // },
+    return await fetch(`${url}/user/?username=${searchQuery}`, {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((data) => data)
@@ -28,14 +21,11 @@ export const getUserDetails = async (id, token) => {
   };
 
   export const updateUser = async (id, token, userData) => {
-    console.log(userData)
-    const apiUrl = `http://localhost:5000/api/user/${id}`;
-    return await fetch(apiUrl, {
-      method: "PUT", // or 'GET', 'PUT', etc.
+    return await fetch(`${url}/user/${id}`, {
+      method: "PUT", 
       headers: {
         "Content-Type": "application/json",
         Authorization : `Bearer ${token}`
-        // Add any other headers if needed
       },
       body: JSON.stringify(userData),
     })
@@ -45,15 +35,11 @@ export const getUserDetails = async (id, token) => {
   };
 
   export const getSuggestedPeople = async (id, token) => {
-    const apiUrl = `http://localhost:5000/api/user/people/${id}`;
-    return await fetch(apiUrl, {
-      method: "GET", // or 'GET', 'PUT', etc.
+    return await fetch(`${url}/user/people/${id}`, {
+      method: "GET", 
       headers: {
-        // "Content-Type": "application/json",
         Authorization : `Bearer ${token}`
-        // Add any other headers if needed
       },
-    //   body: JSON.stringify(userData),
     })
       .then((response) => response.json())
       .then((data) => data)
@@ -61,13 +47,11 @@ export const getUserDetails = async (id, token) => {
   };
 
   export const followUser = async (id, token, followId) => {
-    const apiUrl = `http://localhost:5000/api/user/follow/${id}`;
-    return await fetch(apiUrl, {
-      method: "PUT", // or 'GET', 'PUT', etc.
+    return await fetch(`${url}/user/follow/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization : `Bearer ${token}`
-        // Add any other headers if needed
       },
       body: JSON.stringify({followId}),
     })
@@ -77,13 +61,11 @@ export const getUserDetails = async (id, token) => {
   };
 
   export const unFollowUser = async (id, token, unFollowId) => {
-    const apiUrl = `http://localhost:5000/api/user/unfollow/${id}`;
-    return await fetch(apiUrl, {
-      method: "PUT", // or 'GET', 'PUT', etc.
+    return await fetch(`${url}/user/unfollow/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization : `Bearer ${token}`
-        // Add any other headers if needed
       },
       body: JSON.stringify({unFollowId}),
     })

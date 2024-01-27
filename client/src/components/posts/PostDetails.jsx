@@ -5,14 +5,16 @@ import { Link } from "react-router-dom";
 
 const PostDetails = ({ post, setShowPostDetails, handleAddComment }) => {
   const handleClose = () => {
+    console.log("closed")
     setShowPostDetails(false);
   };
+  console.log(post.desc)
   return (
     <div className="fixed inset-0 flex justify-center items-center z-30">
       {/* Close button */}
       <div
         className="absolute top-5 right-5 z-10 cursor-pointer"
-        onClick={handleClose}
+        onMouseDown={handleClose}
       >
         <RxCross2 style={{ height: "30px", width: "30px", color: "white" }} />
       </div>

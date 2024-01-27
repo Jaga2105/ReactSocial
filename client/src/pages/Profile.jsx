@@ -52,13 +52,13 @@ const Profile = () => {
               <div className="flex  flex-col sm:flex-row gap-2 sm:gap-8">
                 <span>
                   {" "}
-                  <strong>1</strong> post
+                  <strong>{posts.length}</strong> {posts.length >1 ? "posts" : "post"} 
                 </span>
                 <span>
-                  <strong>212</strong> followers
+                  <strong>{userDetails.followers.length}</strong> {userDetails.followers.length >1 ? "followers" : "follower"} 
                 </span>
                 <span>
-                  <strong>634</strong> following
+                  <strong>{userDetails.following.length}</strong> following
                 </span>
               </div>
               <div className="text-gray-600">{userDetails?.email}</div>

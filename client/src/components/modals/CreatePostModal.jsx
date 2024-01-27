@@ -4,6 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
 import uploadPlaceholder from "../../assets/images/upload_img_placeholder.jpg";
 import { useSelector } from "react-redux";
+import { createNewPost } from "../../api/postAPI";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 const CreatePostModal = ({ open, handleCreatePostModal }) => {
@@ -63,20 +64,25 @@ const CreatePostModal = ({ open, handleCreatePostModal }) => {
       desc: enteredCaption,
       postedBy: user._id,
     };
-    const apiUrl = `http://localhost:5000/api/post/${user._id}`;
+    // const apiUrl = `http://localhost:5000/api/post/${user._id}`;
 
-    fetch(apiUrl, {
-      method: "POST", // or 'GET', 'PUT', etc.
-      headers: {
-        "Content-Type": "application/json",
-        Authorization : `Bearer ${user.token}`
-        // Add any other headers if needed
-      },
-      body: JSON.stringify(newPost),
-    })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch((error) => console.error("Error:", error));
+    // fetch(apiUrl, {
+    //   method: "POST", // or 'GET', 'PUT', etc.
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization : `Bearer ${user.token}`
+    //     // Add any other headers if needed
+    //   },
+    //   body: JSON.stringify(newPost),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => console.log(data))
+    //   .catch((error) => console.error("Error:", error));
+    try {
+      await createNewPost(user._id, user.token, newPost)
+    } catch (error) {
+      console.log(error)
+    }
       handleClose()
   };
 
