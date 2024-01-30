@@ -63,6 +63,8 @@ exports.login = async (req, res) => {
     }
 
     const token = jwt.sign({_id:user._id}, process.env.JWT_SECRET, { expiresIn: "5d"})
+    res.cookie('token', token, { expire: new Date() + 9999 });
+
 
     const {password, ...others} = user._doc
     return res.status(200).json({

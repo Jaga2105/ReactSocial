@@ -109,10 +109,10 @@ const Login = () => {
       return toast.error(response.error);
     }
     localStorage.setItem("user", JSON.stringify(response.user));
-    localStorage.setItem(
-      "userExpiry",
-      new Date().getTime() + 2 * 24 * 60 * 60 * 1000
-    );
+    // localStorage.setItem(
+    //   "userExpiry",
+    //   new Date().getTime() + 2 * 24 * 60 * 60 * 1000
+    // );
     dispatch(handleLogin(response.user));
 
     // login success

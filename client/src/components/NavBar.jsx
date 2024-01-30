@@ -71,7 +71,7 @@ const NavBar = () => {
   return (
     <>
       <nav className="fixed top-0 z-30 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">
-        <div className="text-3xl font-bold">ReactSocial</div>
+        <div className="text-3xl font-bold">BeSocial.</div>
         <div className="flex justify-center items-center">
           <NavLink
             to={"/"}

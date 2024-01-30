@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {getLoggedInUser} from "../../helpers/getLoggedInUser"
 
 const INTIAL_STATE ={
-    user: getLoggedInUser() || null,
+    // user: getLoggedInUser() || null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     isFetching: false
 }
 const authSlice = createSlice({
