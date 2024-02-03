@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { followUser, getSuggestedPeople, getUserDetails, unFollowUser } from "../api/userAPI";
 import GridLoader from "react-spinners/GridLoader";
-import PeopleList from "./peoplelist/PeopleList";
+import PeopleList from "../components/peoplelist/PeopleList";
 
 const People = () => {
   const [people, setPeople] = useState(null);
@@ -16,7 +16,6 @@ const People = () => {
   };
   const getCurrentUser = async () => {
     const response = await getUserDetails(user._id, user.token);
-    console.log(response);
     setCurrentUser(response);
   };
   useEffect(() => {

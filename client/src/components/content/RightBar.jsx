@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSuggestedPeople, getUserDetails } from "../api/userAPI";
-import { handleFetch } from "../store/reducers/authSlice";
+import { getSuggestedPeople, getUserDetails } from "../../api/userAPI";
+import { handleFetch } from "../../store/reducers/authSlice";
 import GridLoader from "react-spinners/GridLoader";
-import PeopleList from "./peoplelist/PeopleList";
+import PeopleList from "../peoplelist/PeopleList";
+import { Link } from "react-router-dom";
 
 const RightBar = () => {
   const [people, setPeople] = useState(null);
+  const [showedPeople, setShowedPeople] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
 
   const user = useSelector((state) => state.auth.user);
@@ -16,6 +18,7 @@ const RightBar = () => {
   const getPeople = async () => {
     const response = await getSuggestedPeople(user._id, user.token);
     setPeople(response);
+    setShowedPeople(response.slice(0, 5));
   };
   const getCurrentUser = async () => {
     const response = await getUserDetails(user._id, user.token);
@@ -29,31 +32,20 @@ const RightBar = () => {
     <div className="hidden lg:flex flex-col w-2/6 px-4">
       <div className="">
         <div className="text-2xl font-bold my-4">Suggested for you</div>
-        {/* {people.map((user) => (
-          <div
-            key={user.username}
-            className="flex w-[300px] justify-between items-center"
-          >
-            <div className="flex gap-2 items-center">
-              <div className="h-10 w-10 bg-black flex items-center justify-center text-white text-2xl font-bold rounded-full overflow-hidden">
-              {user.profilePic.length!==0 ? (
-                  <img src={user.profilePic} alt="Profile-Pic"
-                  className="w-full h-full object-cover" />
-                ) : (
-                  user.username.substring(0, 1).toUpperCase()
-                )}
-              </div>
-              <span className="text-lg font-semibold">{user.username}</span>
-            </div>
-            <button className="bg-blue-400 px-2 py-1 rounded-md text-white hover:bg-blue-500">
-              Follow
-            </button>
-          </div>
-        ))} */}
         {currentUser && people ? (
           <>
             {people.length > 0 ? (
-              <PeopleList currentUser={currentUser} people={people} />
+              <div className="flex flex-col gap-4">
+                <PeopleList currentUser={currentUser} people={showedPeople} />
+                {people.length > 5 && (
+                  <Link
+                    to={"/People"}
+                    className="ml-2 text-blue-500 hover:underline hover:text-blue-600"
+                  >
+                    View all
+                  </Link>
+                )}
+              </div>
             ) : (
               <div className="mt-20 text-xl">No users found!</div>
             )}

@@ -4,22 +4,22 @@ import { IoMdHome, IoMdPerson, IoMdSearch, IoMdLogOut } from "react-icons/io";
 import { MdOutlineHome, MdPersonOutline } from "react-icons/md";
 import { FiPlusSquare } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { handleActiveMenu } from "../store/reducers/menuSlice";
-import SearchModal from "./modals/SearchModal";
-import CreatePostModal from "./modals/CreatePostModal";
+import { handleActiveMenu } from "../../store/reducers/menuSlice";
+import SearchModal from "../modals/SearchModal";
+import CreatePostModal from "../modals/CreatePostModal";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { logoutuser } from "../store/reducers/authSlice";
+import { logoutuser } from "../../store/reducers/authSlice";
 
 const SideBar = () => {
-  
   // const dispatch = useDispatch();
 
   // This is  to get the current router path
   const route = useLocation();
   const currentPath = route.pathname.split("/")[1];
+  console.log(currentPath)
 
   // Loggedin user
-  const user = useSelector((state)=>state.auth.user);
+  const user = useSelector((state) => state.auth.user);
 
   // This retrives the active menu from the global store
   const activeMenuTitle = useSelector((state) => state.menu.activeMenu);
@@ -35,7 +35,6 @@ const SideBar = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   const handleMenu = (menuTitle) => {
     dispatch(handleActiveMenu(menuTitle));
@@ -53,14 +52,15 @@ const SideBar = () => {
     setShowCreatePostModal(flag);
   };
 
-  const handleLogout = () =>{
-    dispatch(logoutuser())
-    navigate('/login')
-  }
+  const handleLogout = () => {
+    dispatch(logoutuser());
+    navigate("/login");
+  };
 
   useEffect(() => {
     setActiveMenu(currentPath || activeMenuTitle);
-  }, [activeMenuTitle]);
+  }, [activeMenuTitle, currentPath]);
+  console.log(activeMenu)
 
   return (
     <>
@@ -68,72 +68,93 @@ const SideBar = () => {
         <NavLink
           to={"/"}
           className={({ isActive }) =>
-            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+            `${
+              isActive ? "bg-gray-200" : "hover:bg-gray-200"
+            } flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
           }
           onClick={() => handleMenu("Home")}
         >
           {activeMenu === "Home" ? (
-            <IoMdHome className="h-8 w-8" />
+            <div className="flex items-center">
+              <IoMdHome className="h-8 w-8" />
+              <span className=" text-lg font-bold ml-4">Home</span>
+            </div>
           ) : (
-            <MdOutlineHome className="h-8 w-8" />
+            <div className="flex items-center">
+              <MdOutlineHome className="h-8 w-8" />
+              <span className=" text-lg ml-4">Home</span>
+            </div>
           )}
-          <span className=" text-xl font-bold ml-4">Home</span>
         </NavLink>
         <div
           className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
           onClick={() => setShowSearchModal((prev) => !prev)}
         >
           <IoMdSearch className="h-8 w-8" />
-          <span className=" text-xl font-bold ml-4">Search</span>
+          <span className=" text-lg ml-4">Search</span>
         </div>
         <NavLink
           to={"/People"}
           className={({ isActive }) =>
-            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+            `${
+              isActive ? "bg-gray-200" : "hover:bg-gray-200"
+            } flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
           }
           onClick={() => handleMenu("People")}
         >
           {activeMenu === "People" ? (
-            <BsPeopleFill className="h-8 w-8" />
+            <div className="flex items-center">
+              <BsPeopleFill className="h-8 w-8" />
+              <span className=" text-lg font-bold ml-4">People</span>
+            </div>
           ) : (
-            <BsPeople className="h-8 w-8" />
+            <div className="flex items-center">
+              <BsPeople className="h-8 w-8" />
+              <span className=" text-lg ml-4">People</span>
+            </div>
           )}
-          <span className=" text-xl font-bold ml-4">People</span>
         </NavLink>
         <NavLink
           to={`Profile/${user._id}`}
           className={({ isActive }) =>
-            `${isActive ? "bg-gray-200" : "hover:bg-gray-200"} flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
+            `${
+              isActive ? "bg-gray-200" : "hover:bg-gray-200"
+            } flex items-center py-3 pl-12 mb-2 cursor-pointer rounded-r-md`
           }
           onClick={() => handleMenu("Profile")}
         >
           {activeMenu === "Profile" ? (
-            <IoMdPerson className="h-8 w-8" />
+            <div className="flex items-center">
+              <IoMdPerson className="h-8 w-8" />
+              <span className=" text-lg font-bold ml-4">Profile</span>
+            </div>
           ) : (
-            <MdPersonOutline className="h-8 w-8" />
+            <div className="flex items-center">
+              <MdPersonOutline className="h-8 w-8" />
+              <span className=" text-lg ml-4">Profile</span>
+            </div>
           )}
-          <span className=" text-xl font-bold ml-4">Profile</span>
         </NavLink>
         <div
           className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
           onClick={() => setShowCreatePostModal((prev) => !prev)}
         >
           <FiPlusSquare className="h-8 w-8" />
-          <span className=" text-xl font-bold ml-4">Create</span>
+          <span className=" text-lg ml-4">Create</span>
         </div>
         <div
           className={`flex items-center pl-12 py-3 mb-2 cursor-pointer rounded-r-md hover:bg-gray-200`}
           onClick={handleLogout}
         >
           <IoMdLogOut className="h-8 w-8" />
-          <span className=" text-xl font-bold ml-4">Logout</span>
+          <span className=" text-lg ml-4">Logout</span>
         </div>
       </div>
       <div className="hidden sm:block">
-      <SearchModal
-        open={showSearchModal}
-        handleSearchModal={handleSearchModal}
-      />
+        <SearchModal
+          open={showSearchModal}
+          handleSearchModal={handleSearchModal}
+        />
       </div>
       <CreatePostModal
         open={showCreatePostModal}

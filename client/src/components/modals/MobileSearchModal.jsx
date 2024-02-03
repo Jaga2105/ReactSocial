@@ -10,7 +10,7 @@ const iconStyle = {
 };
 const MobileSearchModal = ({ handleSearchModal }) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchedUsers, setSearchedUsers] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState(null);
 
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ const MobileSearchModal = ({ handleSearchModal }) => {
     if (e.target.value !== "") {
       getUsers(e.target.value);
     } else {
-      setSearchedUsers([]);
+      setSearchedUsers(null);
     }
   };
   const onClose = () => {
@@ -38,7 +38,6 @@ const MobileSearchModal = ({ handleSearchModal }) => {
     setSearchedUsers([]);
     console.log("close");
   };
-
 
   return (
     <div className="flex">
@@ -58,40 +57,42 @@ const MobileSearchModal = ({ handleSearchModal }) => {
           value={searchQuery}
         />
       </div>
-      <div className="fixed min-h-[200px] max-h-[400px] w-[354px] top-16 left-6 bg-white z-40 border shadow-md rounded-md overflow-y-auto">
-        <div className="text-xl font-bold my-5 ml-6">Search</div>
-        <div className="mt-6 flex w-[80%] mx-auto">
-          {searchedUsers.length !== 0 ? (
-            <div className="w-full flex flex-col justify-center gap-2">
-              {searchedUsers.map((user) => (
-                <Link
-                  key={user._id}
-                  to={`/Profile/${user._id}`}
-                  onClick={onClose}
-                  className="flex gap-2 items-center"
-                >
-                  <div className="h-10 w-10 bg-black flex items-center justify-center text-white text-xl font-bold rounded-full overflow-hidden">
-                    {user.profilePic.length !== 0 ? (
-                      <img
-                        src={user.profilePic}
-                        alt="Profile-Pic"
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      user.username.substring(0, 1).toUpperCase()
-                    )}
-                  </div>
-                  <span className="text-lg font-semibold hover:underline">
-                    {user.username}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className=" text-xl mt-10">No users found!!</div>
-          )}
+      {searchedUsers && (
+        <div className="fixed min-h-[200px] max-h-[400px] w-[354px] top-16 left-6 bg-white z-40 border shadow-md rounded-md overflow-y-auto">
+          <div className="text-xl font-bold my-5 ml-6">Search</div>
+          <div className="mt-6 flex w-[80%] mx-auto">
+            {searchedUsers.length !== 0 ? (
+              <div className="w-full flex flex-col justify-center gap-2">
+                {searchedUsers.map((user) => (
+                  <Link
+                    key={user._id}
+                    to={`/Profile/${user._id}`}
+                    onClick={onClose}
+                    className="flex gap-2 items-center"
+                  >
+                    <div className="h-10 w-10 bg-black flex items-center justify-center text-white text-xl font-bold rounded-full overflow-hidden">
+                      {user.profilePic.length !== 0 ? (
+                        <img
+                          src={user.profilePic}
+                          alt="Profile-Pic"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        user.username.substring(0, 1).toUpperCase()
+                      )}
+                    </div>
+                    <span className="text-lg font-semibold hover:underline">
+                      {user.username}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className=" text-xl mt-10">No users found!!</div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

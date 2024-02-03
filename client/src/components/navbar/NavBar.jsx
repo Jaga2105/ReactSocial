@@ -3,10 +3,10 @@ import { IoMdHome, IoMdPerson, IoMdSearch, IoMdLogOut } from "react-icons/io";
 import { BsPeople, BsPeopleFill } from "react-icons/bs";
 import { MdOutlineHome, MdPersonOutline } from "react-icons/md";
 import { FiPlusSquare } from "react-icons/fi";
-import { handleActiveMenu } from "../store/reducers/menuSlice";
+import { handleActiveMenu } from "../../store/reducers/menuSlice";
 import { useDispatch, useSelector } from "react-redux";
-import SearchModal from "./modals/SearchModal";
-import CreatePostModal from "./modals/CreatePostModal";
+import SearchModal from "../modals/SearchModal";
+import CreatePostModal from "../modals/CreatePostModal";
 import {
   Link,
   NavLink,
@@ -14,8 +14,8 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { logoutuser } from "../store/reducers/authSlice";
-import MobileSearchModal from "./modals/MobileSearchModal";
+import { logoutuser } from "../../store/reducers/authSlice";
+import MobileSearchModal from "../modals/MobileSearchModal";
 
 const iconStyle = {
   height: "30px",
@@ -67,7 +67,7 @@ const NavBar = () => {
   };
   useEffect(() => {
     setActiveMenu(currentPath || activeMenuTitle);
-  }, [activeMenuTitle]);
+  }, [activeMenuTitle, currentPath]);
   return (
     <>
       <nav className="fixed top-0 z-30 w-full  flex justify-between h-18 py-3 px-8 md:px-16 border-b-2 shadow-sm mb-6 bg-white">

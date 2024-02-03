@@ -1,7 +1,6 @@
 import React from "react";
-import NavBar from "../components/NavBar";
-import SideBar from "../components/SideBar";
-import Content from "../components/Content";
+import NavBar from "../components/navbar/NavBar";
+import SideBar from "../components/sidebar/SideBar";
 import { Outlet } from "react-router-dom";
 
 const Home = () => {
@@ -10,7 +9,6 @@ const Home = () => {
       <NavBar />
       <div className="flex">
         <SideBar />
-        {/* <Content /> */}
         <div className=" md:ml-[25%] lg:ml-[16.666%] w-full mt-16">
           <Outlet />
         </div>

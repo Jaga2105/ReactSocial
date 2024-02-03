@@ -5,8 +5,8 @@ import {
 } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
-import Content from "./components/Content";
-import People from "./components/People";
+import Content from "./components/content/Content";
+import People from "./pages/People";
 import SignUp from "./components/auth/SignUp";
 import Login from "./components/auth/Login";
 import Welcome from "./pages/Welcome";
@@ -16,7 +16,6 @@ import Profile from "./pages/Profile";
 
 function App() {
   const user = useSelector((state) => state.auth.user);
-  // console.log(user)
   const router = createBrowserRouter([
     {
       path: "/",
@@ -71,10 +70,6 @@ function App() {
 export const ProtectedRoute = ({ children, redirectTo }) => {
   const user = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
-  // if(redirectTo==="/"){
-  //   console.log(redirectTo)
-  //   navigate("/")
-  // }
 
   if (!user) {
     if (redirectTo) {
@@ -87,7 +82,6 @@ export const ProtectedRoute = ({ children, redirectTo }) => {
     // Render nothing or a loading/error component if you prefer
     return null;
   }
-  console.log(redirectTo)
   return children;
 };
 
