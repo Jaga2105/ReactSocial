@@ -12,8 +12,6 @@ app.use(express.json({ limit: '5mb' }))
 app.use(cors())
 app.use(cookieParser());
 
-// // Middleware to parse JSON in the request body
-// app.use(express.json());
  
 // Routes
 app.use("/api/auth", authRoute);
