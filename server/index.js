@@ -22,6 +22,9 @@ app.use(cookieParser());
 app.use("/auth", authRoute);
 app.use("/user", userRoute)
 app.use("/post", postRoute)
+app.get("/", (req, res)=>{
+  res.send("Server listening")
+})
 
 // Database connection
 mongoose
