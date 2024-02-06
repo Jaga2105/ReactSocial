@@ -16,7 +16,6 @@ const SideBar = () => {
   // This is  to get the current router path
   const route = useLocation();
   const currentPath = route.pathname.split("/")[1];
-  console.log(currentPath)
 
   // Loggedin user
   const user = useSelector((state) => state.auth.user);
@@ -47,7 +46,6 @@ const SideBar = () => {
   };
 
   const handleCreatePostModal = (flag) => {
-    console.log(activeMenu);
     dispatch(handleActiveMenu(currentPath || "Home"));
     setShowCreatePostModal(flag);
   };
@@ -60,7 +58,6 @@ const SideBar = () => {
   useEffect(() => {
     setActiveMenu(currentPath || activeMenuTitle);
   }, [activeMenuTitle, currentPath]);
-  console.log(activeMenu)
 
   return (
     <>

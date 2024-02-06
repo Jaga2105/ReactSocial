@@ -26,6 +26,7 @@ export const createNewPost = async (id, token, newPost) => {
 };
 
 export const getTimelinePosts = async (id, token) => {
+  console.log(url)
   return await fetch(`${url}/post/feed/${id}`, {
     method: "GET",
     headers: {

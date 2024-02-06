@@ -36,6 +36,7 @@ exports.getOwnPosts = async (req, res) => {
 };
 
 exports.getTimelinePosts = async (req, res) => {
+  console.log(req.profile)
   let following = [
     ...req.profile.following,
     {
