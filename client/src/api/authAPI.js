@@ -4,6 +4,9 @@ export const registerUser = async (userData) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
     },
     body: JSON.stringify(userData),
   })
@@ -13,14 +16,17 @@ export const registerUser = async (userData) => {
 };
 
 export const login = async (userData) => {
-    return await fetch(`${url}/auth/login`, {
-      method: "POST", 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => response.json())
-      .then((data) => data)
-      .catch((error) => console.error("Error:", error));
-  };
+  return await fetch(`${url}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+    },
+    body: JSON.stringify(userData),
+  })
+    .then((response) => response.json())
+    .then((data) => data)
+    .catch((error) => console.error("Error:", error));
+};
